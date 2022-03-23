@@ -1,0 +1,12 @@
+@import "~bootstrap/scss/bootstrap.scss";
+@import 'font';
+@import './components.style/sidebar';
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $inter;
+}
