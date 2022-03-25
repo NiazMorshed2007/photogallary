@@ -1,0 +1,11 @@
+.main-header {
+  //background: white;
+  border-radius: 10px;
+  height: 65px;
+  .preview-option {
+    font-size: 12px;
+    @include menuoption(max-content, max-content);
+    border-radius: 6px;
+    padding: 8px 10px;
+  }
+}

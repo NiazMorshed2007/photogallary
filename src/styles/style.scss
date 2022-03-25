@@ -1,6 +1,13 @@
 @import "~bootstrap/scss/bootstrap.scss";
+@import "reset";
 @import 'font';
+@import 'colors';
+@import 'customclasses';
+@import 'mixins';
 @import './components.style/sidebar';
+@import "./components.style/header";
+@import "main";
+
 * {
   margin: 0;
   padding: 0;
@@ -9,4 +16,9 @@
 
 body {
   font-family: $inter;
+  width: 100vw;
+  height: 100vh;
+  background: $background;
+  overflow: hidden;
+  color: white;
 }

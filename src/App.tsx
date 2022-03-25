@@ -1,9 +1,9 @@
-import React from 'react';
+import React, {FC} from 'react';
 import Layout from "./Layout/Layout";
 
-function App() {
+const App: FC = () => {
   return (
-   <Layout>Let me greet you! :)</Layout>
+   <Layout>Let me greet you!)</Layout>
   );
 }
 

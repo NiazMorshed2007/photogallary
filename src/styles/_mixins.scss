@@ -1,0 +1,24 @@
+@mixin wh($w, $h) {
+  width: $w;
+  height: $h;
+}
+
+@mixin flex($d, $center) {
+  display: flex;
+  flex-direction: $d;
+  @if(center) {
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@mixin menuoption($h, $w) {
+  @include flex(row, true);
+  @include wh($w, $h);
+  border-radius: 8px;
+  background: rgba(#c6c1c1, .5);
+  svg {
+    font-size: 18px;
+    transition: all .055s ease-in-out;
+  }
+}

@@ -1,4 +1,26 @@
 .sidebar {
-  width: 400px;
-  background: lime;
+  width: 300px;
+  background: $background;
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+  box-shadow: 0 0.125rem 0.25rem rgb(235 225 225 / 51%) !important;
+  header {
+    .logo-wrapper {
+      .loader {
+        z-index: 10000;
+      }
+      svg {
+        font-size: 20px;
+        color: $brandClr;
+      }
+    }
+    .sidebar-navigator {
+      @include menuoption(35px, 35px);
+      &:active {
+        svg {
+          transform: translateX(-4px);
+        }
+      }
+    }
+  }
 }
