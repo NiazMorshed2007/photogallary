@@ -15,6 +15,7 @@
 @mixin menuoption($h, $w) {
   @include flex(row, true);
   @include wh($w, $h);
+  user-select: none;
   border-radius: 8px;
   background: rgba(#c6c1c1, .5);
   svg {

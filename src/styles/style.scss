@@ -6,7 +6,9 @@
 @import 'mixins';
 @import './components.style/sidebar';
 @import "./components.style/header";
+@import "./components.style/album";
 @import "main";
+@import './style.pages/index';
 
 * {
   margin: 0;

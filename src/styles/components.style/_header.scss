@@ -1,11 +1,25 @@
 .main-header {
-  //background: white;
   border-radius: 10px;
-  height: 65px;
-  .preview-option {
-    font-size: 12px;
-    @include menuoption(max-content, max-content);
-    border-radius: 6px;
-    padding: 8px 10px;
+  //height: 75px;
+  .upper {
+    .preview-option {
+      font-size: 11px;
+      @include menuoption(max-content, max-content);
+      svg {
+        font-size: 14px;
+      }
+      border-radius: 6px;
+      padding: 8px 10px;
+    }
+    .add-new-dir {
+      background: linear-gradient(to right, #ff5858, #f857a6);
+    }
+  }
+
+  .down {
+    .total__albums {
+      font-weight: 400;
+      font-size: 15px;
+    }
   }
 }
