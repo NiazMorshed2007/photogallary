@@ -1,10 +1,6 @@
-import React, {FC, useEffect} from 'react';
+import React, {FC} from 'react';
 import {MdMotionPhotosOn} from 'react-icons/md';
 import {BsArrowBarLeft} from 'react-icons/bs';
-import {gsap, Power2, TweenMax} from "gsap";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../reducers";
-import {setLoaded} from "../actions";
 
 const Sidebar: FC = () => {
 
@@ -21,6 +17,7 @@ const Sidebar: FC = () => {
                 <BsArrowBarLeft/>
             </div>
         </header>
+        {/*<Button variant="contained" color='warning'>click</Button>*/}
     </aside>
 }
 

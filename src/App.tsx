@@ -6,6 +6,7 @@ import {
     Route,
 } from "react-router-dom";
 import Home from "./Pages/home";
+import PageAlbum from "./Pages/Page.Album";
 
 const App: FC = () => {
     return (
@@ -14,7 +15,9 @@ const App: FC = () => {
                 <Layout>
                     <Routes>
                         <Route path={'/'} element={<Home/>}/>
+                        <Route path={'/album/:album__id'} element={<PageAlbum />} />
                     </Routes>
+
                 </Layout>
             </Router>
         </>

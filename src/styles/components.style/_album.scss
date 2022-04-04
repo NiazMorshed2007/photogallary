@@ -3,6 +3,7 @@
   height: 285px;
   border-radius: 10px;
   position: relative;
+  user-select: none;
   overflow: hidden;
 &:hover {
   i {
@@ -17,6 +18,8 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    user-select: none;
+
     transition: all .3s ease-in-out;
   }
 
