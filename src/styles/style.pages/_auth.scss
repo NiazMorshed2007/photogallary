@@ -1,0 +1,22 @@
+.login {
+  background-image: url("https://scontent.fdac5-1.fna.fbcdn.net/v/t39.2365-6/275065403_999397957657245_3425932144473298054_n.png?_nc_cat=106&ccb=1-5&_nc_sid=ad8a9d&_nc_ohc=9uFBp5xjDPkAX_T9vzk&_nc_ht=scontent.fdac5-1.fna&oh=00_AT-ICRaSIpNvtrpIJwkDkiPnHxGf4WQmMJK7tHEtcRDbnQ&oe=62519A30");
+  color: $primary;
+  .left {
+    background-color: #ffffff;
+    width: 100%;
+    //background-image: linear-gradient(#ebebf1, #9c987c);
+    //background-image: url("https://images.unsplash.com/photo-1542359649-31e03cd4d909?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80");
+    //background-image: url("https://images.unsplash.com/photo-1521336575822-6da63fb45455?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80");
+    //background-size: cover;
+    //background-position: center;
+    h1 {
+    font-weight: 600;
+      font-size: 44px;
+    }
+  }
+  .blur-box {
+    //@include wh(400px, 460px);
+    backdrop-filter: blur(10px);
+    //border: 1px solid blue;
+  }
+}
