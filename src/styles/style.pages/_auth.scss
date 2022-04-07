@@ -13,6 +13,17 @@
     font-weight: 600;
       font-size: 44px;
     }
+    .img-wrapper {
+      img {
+        width: 210px;
+        height: 140px;
+        border-radius: 10px;
+      }
+      &:nth-child(1) {
+        top: 0;
+        left: 0;
+      }
+    }
   }
   .blur-box {
     //@include wh(400px, 460px);
