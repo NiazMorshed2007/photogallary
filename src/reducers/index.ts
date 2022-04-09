@@ -1,10 +1,8 @@
-import changeLoaded from "./loadinganim";
 import {combineReducers} from 'redux';
-import changeAuth from "./auth";
+import ProfileReducer from './user_profile';
 
 const rootReducer = combineReducers({
-    loaded: changeLoaded,
-    isAuth: changeAuth,
+    user_profile: ProfileReducer,
 })
 
 export default rootReducer;

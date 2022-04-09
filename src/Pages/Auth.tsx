@@ -11,9 +11,6 @@ import {
 
 const Auth: FC = () => {
   const auth = firebase && getAuth();
-  const user = auth.currentUser;
-  console.log(user);
-
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [errMsg, setErrMsg] = useState<string>("");

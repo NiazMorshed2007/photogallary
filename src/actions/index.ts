@@ -1,19 +1,21 @@
+import { IProfile } from "../firebase/IProfile"
+import { SET_PROFILE } from "./ActionTypes"
+
+
 interface IReturn {
     type: string,
 }
 
-export const setLoaded = (): IReturn => {
-    return {
-        type: "LOADED",
-    }
-};
 
-export const setAuth = (): IReturn => {
+export const setProfile = (obj: IProfile) => {
     return {
-        type: 'AUTHENTICATED'
+        type: SET_PROFILE,
+        payload: {
+            displayName: obj.displayName,
+            email: obj.email,
+            photoUrl: obj.photoUrl,
+            emailVerified: obj.emailVerified,
+            uid: obj.uid,
+        }
     }
-}
-
-export const setUid = (id: string):string => {
-    return id;
 }
