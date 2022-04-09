@@ -6,8 +6,12 @@ import PageAlbum from "./Pages/Page.Album";
 import {useSelector} from "react-redux";
 import {RootState} from "./reducers";
 import Auth from "./Pages/Auth";
+import firebase from './firebase/firebase';
+import { getAuth } from 'firebase/auth';
 
 const App: FC = () => {
+    const auth = firebase && getAuth();
+    const user = auth.currentUser;
     const isAuth: boolean = useSelector((state: RootState) => {
         return state.isAuth;
     })
@@ -15,6 +19,9 @@ const App: FC = () => {
     useEffect(() => {
         isAuth ? navigate('/') : navigate('/login');
     }, [isAuth])
+    useEffect(() => {
+        
+    }, [])
     return (
         <>
             {isAuth ?

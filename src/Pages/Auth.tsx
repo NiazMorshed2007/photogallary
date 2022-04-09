@@ -87,6 +87,9 @@ const Auth: FC = () => {
         }
       );
   }, []);
+  useEffect(() => {
+    setErrMsg("");
+  }, [isSigningUp]);
   return (
     <section className="login vh-100 vw-100 d-flex">
       <div className="left d-flex flex-column align-items-center justify-content-center position-relative p-5 h-100">
@@ -111,7 +114,8 @@ const Auth: FC = () => {
         </p>
         <h2 className="mb-3">Sign {isSigningUp ? "Up" : "In"}</h2>
         <form
-          onSubmit={() => {
+          onSubmit={(e) => {
+            e.preventDefault();
             authenticate();
           }}
         >
