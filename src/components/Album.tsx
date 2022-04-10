@@ -1,3 +1,4 @@
+import { Dropdown, Menu } from "antd";
 import React, { FC } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Link } from "react-router-dom";
@@ -19,9 +20,11 @@ const Album: FC<Props> = (props) => {
           <h6>{title}</h6>
           <span>{date}</span>
         </div>
-        <i className="pointer">
-          <BsThreeDotsVertical />
-        </i>
+        <Dropdown overlay={<Menu></Menu>}>
+          <i className="pointer">
+            <BsThreeDotsVertical />
+          </i>
+        </Dropdown>
       </Link>
     </div>
   );

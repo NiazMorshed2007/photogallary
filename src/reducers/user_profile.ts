@@ -1,5 +1,5 @@
 import { SET_PROFILE } from "../actions/ActionTypes"
-import { IProfile } from "../firebase/IProfile";
+import { IProfile } from "../interfaces/IProfile";
 
 const profile: IProfile = {
     displayName: '',

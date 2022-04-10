@@ -28,8 +28,10 @@
     bottom: 5px;
     left: 10px;
     padding: 10px;
-    color: white;
     z-index: 10;
+    span, h6 {
+      color: white;
+    }
   }
   i {
     position: absolute;

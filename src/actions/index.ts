@@ -1,10 +1,6 @@
-import { IProfile } from "../firebase/IProfile"
-import { SET_LOGGED, SET_PROFILE } from "./ActionTypes"
+import { IProfile } from "../interfaces/IProfile"
+import { SET_ALBUMS, SET_LOGGED, SET_PROFILE } from "./ActionTypes"
 
-
-interface IReturn {
-    type: string,
-}
 
 export const setLogged = (bool: boolean) => {
     return {
@@ -25,6 +21,15 @@ export const setProfile = (obj: IProfile) => {
             photoUrl: obj.photoUrl,
             emailVerified: obj.emailVerified,
             uid: obj.uid,
+        }
+    }
+}
+
+export const setAlbums = (arr: []) => {
+    return {
+        type: SET_ALBUMS,
+        payload: {
+            albums: arr,
         }
     }
 }

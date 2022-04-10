@@ -8,6 +8,9 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import { db } from "../firebase/firebase";
+import { IProfile } from "../interfaces/IProfile";
+import { doc, setDoc } from "firebase/firestore";
 
 const Auth: FC = () => {
   const auth = firebase && getAuth();
@@ -18,10 +21,20 @@ const Auth: FC = () => {
   const authenticate = (): void => {
     if (isSigningUp) {
       createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
+        .then(async (userCredential) => {
           const user = userCredential.user;
-          console.log(user);
+          const user_profile: IProfile = {
+            displayName: (user?.displayName ? user.displayName : user?.email)!,
+            photoUrl: user?.photoURL!,
+            email: user?.email!,
+            emailVerified: user?.emailVerified!,
+            uid: user?.uid!,
+          };
           setErrMsg("");
+          await setDoc(doc(db, "users", user?.uid), {
+            ...user_profile,
+            albums: [],
+          });
         })
         .catch((err) => {
           console.log(err.message);

@@ -96,6 +96,19 @@ const Layout: FC<Props> = (props) => {
         "<"
       )
       .fromTo(
+        ".down",
+        {
+          opacity: 0,
+          y: 20,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          ease: Power2.easeOut,
+        },
+        "<"
+      )
+      .fromTo(
         ".btn-header",
         {
           opacity: 0,
@@ -119,7 +132,7 @@ const Layout: FC<Props> = (props) => {
         {
           y: 0,
           opacity: 1,
-          stagger: 0.25,
+          stagger: 0.035,
           ease: Power2.easeOut,
         }
       );

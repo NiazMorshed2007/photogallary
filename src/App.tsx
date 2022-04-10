@@ -9,13 +9,18 @@ import Auth from "./Pages/Auth";
 import firebase from "./firebase/firebase";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useDispatch } from "react-redux";
-import { setLogged, setProfile } from "./actions";
-import { IProfile } from "./firebase/IProfile";
+import { setAlbums, setLogged, setProfile } from "./actions";
+import { IProfile } from "./interfaces/IProfile";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "./firebase/firebase";
 
 const App: FC = () => {
   const auth = firebase && getAuth();
   const [loading, setLoading] = useState<boolean>(true);
   const dispatch = useDispatch();
+  const user_albums: [] = useSelector((state: RootState) => {
+    return state.user_albums;
+  });
   const isLogged: boolean = useSelector((state: RootState) => {
     return state.isLogged;
   });
@@ -47,6 +52,13 @@ const App: FC = () => {
       dispatch(setLogged(true));
     }
   }, [user_profile]);
+  useEffect(() => {
+    // const docRef = doc(db, "users", user_profile?.uid);
+    // getDoc(docRef).then((doc) => {
+    //   dispatch(setAlbums(doc.data()?.albums));
+    //   console.log(user_albums);
+    // });
+  }, []);
   return (
     <>
       {loading ? (
