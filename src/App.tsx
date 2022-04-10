@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 import Layout from "./Layout/Layout";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import Home from "./Pages/home";
@@ -7,48 +7,64 @@ import { useSelector } from "react-redux";
 import { RootState } from "./reducers";
 import Auth from "./Pages/Auth";
 import firebase from "./firebase/firebase";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useDispatch } from "react-redux";
-import { setProfile } from "./actions";
+import { setLogged, setProfile } from "./actions";
 import { IProfile } from "./firebase/IProfile";
 
 const App: FC = () => {
   const auth = firebase && getAuth();
-  const user = auth.currentUser;
+  const [loading, setLoading] = useState<boolean>(true);
   const dispatch = useDispatch();
+  const isLogged: boolean = useSelector((state: RootState) => {
+    return state.isLogged;
+  });
   const user_profile: IProfile = useSelector((state: RootState) => {
     return state.user_profile;
   });
 
-  const navigate = useNavigate();
   useEffect(() => {
-    navigate("/login");
-  }, []);
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const user_obj: IProfile = {
+          displayName: user?.displayName!,
+          email: user?.email!,
+          photoUrl: user?.photoURL!,
+          emailVerified: user?.emailVerified!,
+          uid: user?.uid!,
+        };
+        dispatch(setProfile(user_obj));
+        setLoading(false);
+      } else {
+        console.log("signed out");
+        setLoading(false);
+      }
+    });
+  }, [auth]);
+
   useEffect(() => {
-    if (user !== null) {
-      const user_obj: IProfile = {
-        displayName: user?.displayName!,
-        email: user?.email!,
-        photoUrl: user?.photoURL!,
-        emailVerified: user?.emailVerified!,
-        uid: user.uid,
-      };
-      dispatch(setProfile(user_obj));
+    if (user_profile.uid !== "") {
+      dispatch(setLogged(true));
     }
-    console.log(user_profile);
-  }, []);
+  }, [user_profile]);
   return (
     <>
-      {/* {isAuth ? (
-        <Layout>
-          <Routes>
-            <Route path={"/"} element={<Home />} />
-            <Route path={"/album/:album__id"} element={<PageAlbum />} />
-          </Routes>
-        </Layout>
-      ) : ( */}
-      <Auth />
-      {/* )} */}
+      {loading ? (
+        "loading"
+      ) : (
+        <>
+          {isLogged && user_profile.uid !== "" ? (
+            <Layout>
+              <Routes>
+                <Route path={"/"} element={<Home />} />
+                <Route path={"/album/:album__id"} element={<PageAlbum />} />
+              </Routes>
+            </Layout>
+          ) : (
+            <Auth />
+          )}
+        </>
+      )}
     </>
   );
 };

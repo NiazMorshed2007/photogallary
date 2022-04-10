@@ -1,6 +1,7 @@
 import { SET_PROFILE } from "../actions/ActionTypes"
+import { IProfile } from "../firebase/IProfile";
 
-const profile = {
+const profile: IProfile = {
     displayName: '',
     email: '',
     photoUrl: '',

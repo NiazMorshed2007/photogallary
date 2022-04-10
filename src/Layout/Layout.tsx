@@ -128,7 +128,7 @@ const Layout: FC<Props> = (props) => {
     <main className="layout d-flex vh-100 vw-100">
       <div
         className="layer vh-100 vw-100 position-fixed"
-        style={{ pointerEvents: "none", background: "black" }}
+        style={{ pointerEvents: "none", background: "white" }}
       >
         {""}
       </div>

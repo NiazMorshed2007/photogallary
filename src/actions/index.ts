@@ -1,9 +1,18 @@
 import { IProfile } from "../firebase/IProfile"
-import { SET_PROFILE } from "./ActionTypes"
+import { SET_LOGGED, SET_PROFILE } from "./ActionTypes"
 
 
 interface IReturn {
     type: string,
+}
+
+export const setLogged = (bool: boolean) => {
+    return {
+        type: SET_LOGGED,
+        payload: {
+            val: bool,
+        }
+    }
 }
 
 
