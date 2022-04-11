@@ -1,3 +1,7 @@
 .pointer {
   cursor: pointer;
 }
+
+.btn-primary {
+  @include primary_btn();
+}

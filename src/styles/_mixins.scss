@@ -23,3 +23,15 @@
     transition: all .055s ease-in-out;
   }
 }
+
+@mixin primary_btn() {
+  border-radius: 20px;
+  background: $brandClr;
+  border-color: $brandClr;
+  color: white;
+  &:hover, &:focus {
+    border-color: $brandClr;
+    background-color: $brandClr;
+    box-shadow: none;
+  }
+}

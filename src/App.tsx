@@ -56,7 +56,7 @@ const App: FC = () => {
         const user_data: DocumentData = [];
         if (docSnap.exists()) {
           user_data.push(docSnap.data());
-          dispatch(setAlbums(user_data?.albums));
+          dispatch(setAlbums(user_data.albums ? user_data.albums : []));
         }
       } else {
         console.log("No such document!");

@@ -2,4 +2,7 @@
   .albums-wrapper {
 
   }
+  img {
+    @include wh(250px, 250px);
+  }
 }
