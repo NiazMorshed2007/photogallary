@@ -1,26 +1,22 @@
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { doc, DocumentData, getDoc } from "firebase/firestore";
 import React, { FC, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Route, Routes } from "react-router-dom";
+import { setAlbums, setLogged, setProfile } from "./actions";
+import firebase, { db } from "./firebase/firebase";
+import { IProfile } from "./interfaces/IProfile";
 import Layout from "./Layout/Layout";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import Auth from "./Pages/Auth";
 import Home from "./Pages/home";
 import PageAlbum from "./Pages/Page.Album";
-import { useSelector } from "react-redux";
 import { RootState } from "./reducers";
-import Auth from "./Pages/Auth";
-import firebase from "./firebase/firebase";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { useDispatch } from "react-redux";
-import { setAlbums, setLogged, setProfile } from "./actions";
-import { IProfile } from "./interfaces/IProfile";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "./firebase/firebase";
 
 const App: FC = () => {
   const auth = firebase && getAuth();
   const [loading, setLoading] = useState<boolean>(true);
   const dispatch = useDispatch();
-  const user_albums: [] = useSelector((state: RootState) => {
-    return state.user_albums;
-  });
+
   const isLogged: boolean = useSelector((state: RootState) => {
     return state.isLogged;
   });
@@ -53,12 +49,21 @@ const App: FC = () => {
     }
   }, [user_profile]);
   useEffect(() => {
-    // const docRef = doc(db, "users", user_profile?.uid);
-    // getDoc(docRef).then((doc) => {
-    //   dispatch(setAlbums(doc.data()?.albums));
-    //   console.log(user_albums);
-    // });
-  }, []);
+    const getData = async (): Promise<void> => {
+      if (user_profile.uid !== "") {
+        const docRef = doc(db, "users", user_profile.uid);
+        const docSnap = await getDoc(docRef);
+        const user_data: DocumentData = [];
+        if (docSnap.exists()) {
+          user_data.push(docSnap.data());
+          dispatch(setAlbums(user_data?.albums));
+        }
+      } else {
+        console.log("No such document!");
+      }
+    };
+    getData();
+  }, [user_profile]);
   return (
     <>
       {loading ? (
