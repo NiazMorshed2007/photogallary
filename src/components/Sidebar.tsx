@@ -6,13 +6,11 @@ import firebase from "../firebase/firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../reducers";
 import { setLogged } from "../actions";
+import { Button } from "antd";
 
 const Sidebar: FC = () => {
   const auth = firebase && getAuth();
-  const disptch = useDispatch();
-  const isLogged: boolean = useSelector((state: RootState) => {
-    return state.isLogged;
-  });
+  const dispatch = useDispatch();
   const logout = (): void => {
     // firebase.auth()
     //   .signOut()
@@ -23,7 +21,7 @@ const Sidebar: FC = () => {
     //     console.log(err);
     //   });
     auth.signOut();
-    disptch(setLogged(false));
+    dispatch(setLogged(false));
   };
   return (
     <aside className={`sidebar border p-3 pt-4`}>
@@ -40,7 +38,12 @@ const Sidebar: FC = () => {
           <BsArrowBarLeft />
         </div>
       </header>
-      <button onClick={() => logout()}>log out</button>
+      <Button
+        className="position-absolute mb-4 bottom-0 btn-primary"
+        onClick={() => logout()}
+      >
+        log out
+      </Button>
       {/*<Button variant="contained" color='warning'>click</Button>*/}
     </aside>
   );

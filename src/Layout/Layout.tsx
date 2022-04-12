@@ -142,14 +142,9 @@ const Layout: FC<Props> = (props) => {
       <div
         className="layer vh-100 vw-100 position-fixed"
         style={{ pointerEvents: "none", background: "white" }}
-      >
-        {""}
-      </div>
+      ></div>
       <Sidebar />
-      <main className="content w-100 py-3">
-        <Header />
-        {children}
-      </main>
+      <main className="content w-100 py-3">{children}</main>
     </main>
   );
 };

@@ -1,7 +1,7 @@
 import {IPhoto} from "./IPhoto";
 
 export interface IAlbum {
-    picture: string,
+    thumb: string,
     id: string,
     title: string,
     date: string,

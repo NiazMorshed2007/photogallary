@@ -1,3 +1,4 @@
+import { IAlbum } from "../interfaces/IAlbum"
 import { IProfile } from "../interfaces/IProfile"
 import { SET_ALBUMS, SET_LOGGED, SET_PROFILE } from "./ActionTypes"
 
@@ -25,7 +26,7 @@ export const setProfile = (obj: IProfile) => {
     }
 }
 
-export const setAlbums = (arr: []) => {
+export const setAlbums = (arr: IAlbum[]) => {
     return {
         type: SET_ALBUMS,
         payload: {

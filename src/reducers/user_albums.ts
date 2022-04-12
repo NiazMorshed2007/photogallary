@@ -1,6 +1,7 @@
 import { SET_ALBUMS } from "../actions/ActionTypes";
+import { IAlbum } from "../interfaces/IAlbum";
 
-const albums: [] = [];
+const albums: IAlbum[] = [];
 
 const AlbumsReducer = (state = albums, action: any) => {
     switch(action.type) {
