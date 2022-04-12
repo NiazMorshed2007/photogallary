@@ -54,6 +54,7 @@
     ]
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.180"
+    "@types/lodash": "^4.14.180",
+    "redux-devtools-extension": "^2.13.9"
   }
 }

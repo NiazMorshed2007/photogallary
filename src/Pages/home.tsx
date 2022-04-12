@@ -16,7 +16,7 @@ const Home: FC = () => {
     return state.user_albums;
   });
   return (
-    <section className="home py-3 pb-5 mb-3 overflow-auto px-2">
+    <section className="home pb-5 mb-3 overflow-auto h-100 px-2">
       <Header
         upper={
           <>
@@ -26,7 +26,12 @@ const Home: FC = () => {
                 <BsUiRadiosGrid />
                 <span>Show Preview</span>
               </div>
-              <div className="add-new-dir btn-header preview-option d-flex gap-1 align-items-center pointer">
+              <div
+                onClick={() => {
+                  navigate("/create");
+                }}
+                className="add-new-dir btn-header preview-option d-flex gap-1 align-items-center pointer"
+              >
                 <HiOutlinePlusSm />
                 <span>Add new</span>
               </div>
@@ -36,17 +41,22 @@ const Home: FC = () => {
         down={
           <>
             <div className="pt-2">
-              <span className="total__albums">24 Albums of photos</span>
+              <span className="total__albums">
+                {user_albums.length} Albums of photos
+              </span>
             </div>
           </>
         }
       />
-      <p>{user_albums.length}</p>
       {user_albums.length > 0 ? (
-        <div className="albums-wrapper d-flex align-items-center justify-content-between flex-wrap pt-3">
-          {user_albums.map((album) => (
-            <Album key={album.id} album={album} />
-          ))}
+        <div className="h-100">
+          <div>
+            <div className="albums-wrapper px-5 d-flex align-items-center justify-content-between flex-wrap pt-3">
+              {user_albums.map((album) => (
+                <Album key={album.id} album={album} />
+              ))}
+            </div>
+          </div>
         </div>
       ) : (
         <div className="empty mt-4 d-flex align-items-center justify-content-center w-100 h-100 flex-column">

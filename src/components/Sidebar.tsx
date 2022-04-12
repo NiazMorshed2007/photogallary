@@ -1,12 +1,11 @@
-import React, { FC } from "react";
-import { MdMotionPhotosOn } from "react-icons/md";
-import { BsArrowBarLeft } from "react-icons/bs";
-import { getAuth } from "firebase/auth";
-import firebase from "../firebase/firebase";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../reducers";
-import { setLogged } from "../actions";
 import { Button } from "antd";
+import { getAuth } from "firebase/auth";
+import React, { FC } from "react";
+import { BsArrowBarLeft } from "react-icons/bs";
+import { MdMotionPhotosOn } from "react-icons/md";
+import { useDispatch } from "react-redux";
+import { setLogged } from "../actions";
+import firebase from "../firebase/firebase";
 
 const Sidebar: FC = () => {
   const auth = firebase && getAuth();

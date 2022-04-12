@@ -1,5 +1,9 @@
 .main-header {
   border-radius: 10px;
+  background-color: $background;
+  z-index: 400;
+  position: sticky;
+  top: 0;
   //height: 75px;
   .upper {
     .preview-option {

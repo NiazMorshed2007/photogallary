@@ -1,5 +1,5 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { doc, DocumentData, getDoc } from "firebase/firestore";
+import { doc, DocumentData, getDoc, onSnapshot } from "firebase/firestore";
 import React, { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Route, Routes } from "react-router-dom";
@@ -37,7 +37,7 @@ const App: FC = () => {
         };
         dispatch(setProfile(user_obj));
         setLoading(false);
-        console.log("cat");
+        dispatch(setLogged(true));
       } else {
         console.log("signed out");
         setLoading(false);
@@ -46,32 +46,21 @@ const App: FC = () => {
   }, []);
 
   useEffect(() => {
-    console.log(user_profile.uid);
-    if (!loading) {
-      if (user_profile.uid) {
-        dispatch(setLogged(true));
-      }
-    }
-  }, [loading]);
-  useEffect(() => {
     const getData = async (): Promise<void> => {
-      if (isLogged && !loading) {
-        const docRef = doc(db, "users", user_profile.uid);
-        const docSnap = await getDoc(docRef);
-        const user_data: DocumentData = [];
-        user_data.push(docSnap.data());
-        // if (user_data.albums) {
-        console.log(docSnap?.data()?.albums);
-        // dispatch(setAlbums(user_data.albums));
-        // }
-        // } else {
-        // console.log("No such document!");
+      if (user_profile.uid !== "" && !loading) {
+        const unsub = onSnapshot(doc(db, "users", user_profile.uid), (doc) => {
+          console.log("Current data: ", doc.data());
+          const user_data: DocumentData = [];
+          user_data.push(doc.data());
+          console.log(user_data);
+
+          dispatch(setAlbums(user_data[0].albums ? user_data[0].albums : []));
+        });
       }
-      console.log("calling");
-      console.log(isLogged);
     };
     getData();
-  }, [loading]);
+  }, [loading, user_profile]);
+
   return (
     <>
       {loading ? (
