@@ -4,6 +4,7 @@ import * as _ from "lodash";
 import { IAlbum } from "../interfaces/IAlbum";
 import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
+import Header from "../components/Header";
 
 const PageAlbum: FC = () => {
   const user_albums: IAlbum[] = useSelector((state: RootState) => {
@@ -17,7 +18,18 @@ const PageAlbum: FC = () => {
     })!;
   return (
     <section className="page-album">
-      {album && <div>{album.title}</div>}
+      <Header
+        upper={
+          <>
+            <h3>{album && album.title}</h3>
+          </>
+        }
+        down={
+          <>
+            <p>{album.photos.length} Photos</p>
+          </>
+        }
+      />
     </section>
   );
 };
