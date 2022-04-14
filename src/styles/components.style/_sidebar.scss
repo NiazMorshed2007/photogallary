@@ -1,5 +1,5 @@
 .sidebar {
-  width: 260px;
+  width: 280px;
   background: $background;
   // border-top-right-radius: 25px;
   // border-bottom-right-radius: 25px;
@@ -29,7 +29,6 @@
         padding: 10px;
         border-radius: 20px;
         color: $primary;
-        padding-left: 18px;
         display: flex;
         align-items: center;
         gap: 0.4em;
@@ -52,6 +51,18 @@
         svg {
           color: $primary;
         }
+      }
+    }
+  }
+
+  footer {
+    .avatar-wrapper {
+      @include wh(48px, 48px);
+      border-radius: 50%;
+      overflow: hidden;
+      img {
+        @include wh(100%, 100%);
+        object-fit: cover;
       }
     }
   }

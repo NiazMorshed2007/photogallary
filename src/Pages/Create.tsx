@@ -106,7 +106,11 @@ const Create: FC = () => {
             <h2>Create Album</h2>
           </>
         }
-        down={<></>}
+        down={
+          <>
+            <p className="pt-2">Create an album to store your memories</p>
+          </>
+        }
       />
       <main className="create-form-wrapper p-5 mx-2">
         {/* <Form form={form}>

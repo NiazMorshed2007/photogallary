@@ -3,6 +3,9 @@ import React, { FC } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { IAlbum } from "../interfaces/IAlbum";
+import { MdOutlineFavoriteBorder } from "react-icons/md";
+import { FiEdit2 } from "react-icons/fi";
+import { AiOutlineDelete } from "react-icons/ai";
 
 interface Props {
   album: IAlbum;
@@ -18,8 +21,20 @@ const Album: FC<Props> = (props) => {
           <h6>{album.title}</h6>
           <span>{album.date}</span>
         </div>
-        <Dropdown overlay={<Menu></Menu>}>
-          <i className="pointer">
+        <Dropdown
+          placement="bottom"
+          trigger={["click"]}
+          overlay={
+            <Menu>
+              <Menu.Item icon={<MdOutlineFavoriteBorder />}>
+                Add to favorites
+              </Menu.Item>
+              <Menu.Item icon={<FiEdit2 />}>Edit</Menu.Item>
+              <Menu.Item icon={<AiOutlineDelete />}>Delete album</Menu.Item>
+            </Menu>
+          }
+        >
+          <i className="pointer text-white">
             <BsThreeDotsVertical />
           </i>
         </Dropdown>

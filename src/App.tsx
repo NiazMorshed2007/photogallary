@@ -29,7 +29,7 @@ const App: FC = () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         const user_obj: IProfile = {
-          displayName: user?.displayName!,
+          displayName: user?.displayName ? user.displayName : user?.email!,
           email: user?.email!,
           photoUrl: user?.photoURL!,
           emailVerified: user?.emailVerified!,
@@ -38,6 +38,7 @@ const App: FC = () => {
         dispatch(setProfile(user_obj));
         setLoading(false);
         dispatch(setLogged(true));
+        console.log(user);
       } else {
         console.log("signed out");
         setLoading(false);
