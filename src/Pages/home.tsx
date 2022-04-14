@@ -16,7 +16,7 @@ const Home: FC = () => {
     return state.user_albums;
   });
   return (
-    <section className="home pb-5 mb-3 overflow-auto h-100 px-2">
+    <section className="home pb-5 mb-3 overflow-auto h-100">
       <Header
         upper={
           <>

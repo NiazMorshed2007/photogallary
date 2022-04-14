@@ -1,8 +1,8 @@
 .sidebar {
-  width: 300px;
+  width: 260px;
   background: $background;
-  border-top-right-radius: 25px;
-  border-bottom-right-radius: 25px;
+  // border-top-right-radius: 25px;
+  // border-bottom-right-radius: 25px;
   //box-shadow: 0 0.125rem 0.25rem rgb(235 225 225 / 51%);
   header {
     .logo-wrapper {
@@ -19,6 +19,38 @@
       &:active {
         svg {
           transform: translateX(-4px);
+        }
+      }
+    }
+  }
+  .sidebar-items-wrapper {
+    .item-link {
+      .item {
+        padding: 10px;
+        border-radius: 20px;
+        color: $primary;
+        padding-left: 18px;
+        display: flex;
+        align-items: center;
+        gap: 0.4em;
+        transition: background .3s ease-in-out;
+        svg {
+          font-size: 18px;
+          color: rgb(146, 146, 146);
+        }
+      }
+      &:hover {
+        .item {
+          background: rgb(226, 226, 226);
+       }
+      }
+    }
+    .item-link.active {
+      .item {
+        color: rgb(46, 44, 44);
+        font-weight: 600;
+        svg {
+          color: $primary;
         }
       }
     }

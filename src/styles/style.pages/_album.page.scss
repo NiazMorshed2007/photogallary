@@ -1,0 +1,7 @@
+.page-album {
+    .empty {
+        img {
+            @include wh(280px, 280px);
+        }
+    }
+}
