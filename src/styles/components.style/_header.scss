@@ -1,5 +1,6 @@
 .main-header {
-  background-color: $background;
+  background-color: rgba($color: $background, $alpha: 0.7);
+  backdrop-filter: blur(9px);
   z-index: 400;
   position: sticky;
   top: 0;

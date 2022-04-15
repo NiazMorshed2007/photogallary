@@ -1,10 +1,5 @@
 import { Button } from "antd";
-import {
-  arrayUnion,
-  doc,
-  serverTimestamp,
-  updateDoc,
-} from "firebase/firestore";
+import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import React, { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -13,6 +8,7 @@ import Album from "../components/Album";
 import Header from "../components/Header";
 import ProgressBar from "../components/ProgressBar";
 import { db, storage } from "../firebase/firebase";
+import { dateFormatter } from "../functions/DateFormatter";
 import { IAlbum } from "../interfaces/IAlbum";
 import { IProfile } from "../interfaces/IProfile";
 import { RootState } from "../reducers";
@@ -24,7 +20,7 @@ const Create: FC = () => {
   const [uploading, setUploading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [albumName, setAlbumName] = useState<string>("");
-  const storageRef = ref(storage, "images/" + file?.name);
+  const storageRef = ref(storage, "albums-images/" + file?.name);
   const navigate = useNavigate();
   const user_profile: IProfile = useSelector((state: RootState) => {
     return state.user_profile;
@@ -35,7 +31,7 @@ const Create: FC = () => {
     id: albumName.toLocaleLowerCase(),
     photos: [],
     thumb: url,
-    date: "15 April, 2022",
+    date: dateFormatter("m/d/y"),
   };
   const metadata = {
     contentType: "image/jpeg",
@@ -51,16 +47,7 @@ const Create: FC = () => {
           // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + progress + "% done");
           setProgress(progress);
-          switch (snapshot.state) {
-            case "paused":
-              console.log("Upload is paused");
-              break;
-            case "running":
-              console.log("Upload is running");
-              break;
-          }
         },
         (error) => {
           // A full list of error codes is available at
@@ -92,7 +79,7 @@ const Create: FC = () => {
               thumb: URL,
               title: albumName,
               id: albumName.toLocaleLowerCase(),
-              date: "skdf",
+              date: dateFormatter("m/d/y"),
               timestamp: new Date(),
             }),
           });
@@ -143,22 +130,6 @@ const Create: FC = () => {
         }
       />
       <main className="create-form-wrapper d-flex align-items-center mt-3 p-5 mx-2">
-        {/* <Form form={form}>
-          <Form.Item>
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="upload"
-            label="Upload"
-            valuePropName="fileList"
-            getValueFromEvent={normFile}
-            extra="longgggggggggggggggggggggggggggggggggg"
-          >
-            <Upload name="logo" action="/upload.do" listType="picture">
-              <Button icon={<BsUpload />}>Click to upload</Button>
-            </Upload>
-          </Form.Item>
-        </Form> */}
         <div className="form-wrap w-50">
           <p className="mb-4 border-bottom w-75 pb-2">Set album info</p>
           <form
@@ -186,7 +157,11 @@ const Create: FC = () => {
             </label>
             {uploading && <ProgressBar progress={progress} />}
             <div className="d-flex gap-3">
-              <Button size="large" className="btn-secondary">
+              <Button
+                onClick={() => navigate(-1)}
+                size="large"
+                className="btn-secondary"
+              >
                 Cancel
               </Button>
               <Button
