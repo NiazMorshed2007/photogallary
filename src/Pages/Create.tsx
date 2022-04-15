@@ -1,4 +1,10 @@
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { Button } from "antd";
+import {
+  arrayUnion,
+  doc,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import React, { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -23,7 +29,7 @@ const Create: FC = () => {
   });
   const types: String[] = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
   const preview_album: IAlbum = {
-    title: albumName,
+    title: albumName !== "" ? albumName : "--- ---- --- --- ---",
     id: albumName.toLocaleLowerCase(),
     photos: [],
     thumb: url,
@@ -83,6 +89,7 @@ const Create: FC = () => {
               title: albumName,
               id: albumName.toLocaleLowerCase(),
               date: "skdf",
+              timestamp: new Date(),
             }),
           });
         }
@@ -99,7 +106,7 @@ const Create: FC = () => {
       console.log("success");
     } else {
       setFile(null);
-      setError("Please select a image file (jpg, png or jpeg)");
+      setError("Please select a image file (jpg, png, gif or jpeg)");
       console.log("failed");
     }
   };
@@ -145,35 +152,43 @@ const Create: FC = () => {
             </Upload>
           </Form.Item>
         </Form> */}
-        <form
-          className="w-50"
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
-        >
-          <p className="mb-3">Set album info</p>
-          <input
-            required
-            value={albumName}
-            onChange={(e) => {
-              setAlbumName(e.target.value);
-            }}
-            type="text"
-          />
-          <div className="uploader-wrpper">
-            <input onChange={uploader} type="file" />
-            {file && <p>{file.name}</p>}
-            {error !== "" && <p>{error}</p>}
-          </div>
-          <button
-            onClick={() => {
-              upload_to_server();
+        <div className="form-wrap w-50">
+          <p className="mb-4 border-bottom w-75 pb-2">Set album info</p>
+          <form
+            className="w-75 d-flex flex-column gap-4"
+            onSubmit={(e) => {
+              e.preventDefault();
             }}
           >
-            ok
-          </button>
-        </form>
-        <hr />
+            <label>
+              <input
+                required
+                value={albumName}
+                onChange={(e) => {
+                  setAlbumName(e.target.value);
+                }}
+                type="text"
+              />
+              <span>Album name</span>
+            </label>
+            <div className="uploader-wrpper">
+              <label>
+                <input onChange={uploader} type="file" />
+              </label>
+              {error !== "" && <p className="error">{error}</p>}
+            </div>
+            <Button
+              htmlType="submit"
+              size="large"
+              className="btn-primary"
+              onClick={() => {
+                upload_to_server();
+              }}
+            >
+              Create
+            </Button>
+          </form>
+        </div>
         <div className="preview w-50 h-100">
           <p className="mb-3">Preview</p>
           <Album isPreviewMode={true} album={preview_album} />

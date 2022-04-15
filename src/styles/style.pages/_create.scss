@@ -1,0 +1,33 @@
+.create {
+  .create-form-wrapper {
+    form {
+      height: 285px;
+      label {
+        position: relative;
+        input {
+          width: 380px;
+          padding: 10px;
+          border: none;
+          outline: none;
+          border-radius: 7px;
+          background: none;
+          border: 2px solid rgb(230, 230, 230);
+          margin-bottom: 10px;
+        }
+        span {
+          position: absolute;
+          top: 40%;
+          left: 15px;
+          transform: translateY(-50%);
+          pointer-events: none;
+          color: silver;
+          font-size: 13px;
+        }
+      }
+      .error {
+        color: $error;
+        font-size: 13px;
+      }
+    }
+  }
+}
