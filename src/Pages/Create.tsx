@@ -8,8 +8,10 @@ import {
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import React, { FC, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Album from "../components/Album";
 import Header from "../components/Header";
+import ProgressBar from "../components/ProgressBar";
 import { db, storage } from "../firebase/firebase";
 import { IAlbum } from "../interfaces/IAlbum";
 import { IProfile } from "../interfaces/IProfile";
@@ -18,14 +20,14 @@ import { RootState } from "../reducers";
 const Create: FC = () => {
   const [file, setFile] = useState<any>(null);
   const [url, setUrl] = useState<string>("");
+  const [progress, setProgress] = useState<number>(0);
+  const [uploading, setUploading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const [albumName, setAlbumName] = useState<string>("");
   const storageRef = ref(storage, "images/" + file?.name);
+  const navigate = useNavigate();
   const user_profile: IProfile = useSelector((state: RootState) => {
     return state.user_profile;
-  });
-  const user_albums: IAlbum[] = useSelector((state: RootState) => {
-    return state.user_albums;
   });
   const types: String[] = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
   const preview_album: IAlbum = {
@@ -33,7 +35,7 @@ const Create: FC = () => {
     id: albumName.toLocaleLowerCase(),
     photos: [],
     thumb: url,
-    date: "sdajkf",
+    date: "15 April, 2022",
   };
   const metadata = {
     contentType: "image/jpeg",
@@ -45,10 +47,12 @@ const Create: FC = () => {
       uploadTask.on(
         "state_changed",
         (snapshot) => {
+          setUploading(true);
           // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
           const progress =
             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
           console.log("Upload is " + progress + "% done");
+          setProgress(progress);
           switch (snapshot.state) {
             case "paused":
               console.log("Upload is paused");
@@ -92,6 +96,9 @@ const Create: FC = () => {
               timestamp: new Date(),
             }),
           });
+          setUploading(false);
+          setAlbumName("");
+          navigate(`/album/${preview_album.id}`);
         }
       );
     }
@@ -171,22 +178,28 @@ const Create: FC = () => {
               />
               <span>Album name</span>
             </label>
-            <div className="uploader-wrpper">
-              <label>
+            <label>
+              <div className="uploader-wrpper">
                 <input onChange={uploader} type="file" />
-              </label>
-              {error !== "" && <p className="error">{error}</p>}
+                {error !== "" && <p className="error">{error}</p>}
+              </div>
+            </label>
+            {uploading && <ProgressBar progress={progress} />}
+            <div className="d-flex gap-3">
+              <Button size="large" className="btn-secondary">
+                Cancel
+              </Button>
+              <Button
+                htmlType="submit"
+                size="large"
+                className="btn-primary"
+                onClick={() => {
+                  upload_to_server();
+                }}
+              >
+                Create
+              </Button>
             </div>
-            <Button
-              htmlType="submit"
-              size="large"
-              className="btn-primary"
-              onClick={() => {
-                upload_to_server();
-              }}
-            >
-              Create
-            </Button>
           </form>
         </div>
         <div className="preview w-50 h-100">

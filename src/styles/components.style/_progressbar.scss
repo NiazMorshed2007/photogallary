@@ -1,0 +1,14 @@
+.progress-bar-parent {
+  span {
+    font-size: 13px;
+    color: $brandClr;
+  }
+  .progress-bar-wrapper {
+    height: 3px;
+    background-color: $input_back;
+    .juice {
+      height: 100%;
+      background: $brandClr;
+    }
+  }
+}

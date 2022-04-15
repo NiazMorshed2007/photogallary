@@ -5,3 +5,15 @@
 .btn-primary {
   @include primary_btn();
 }
+
+.btn-secondary {
+  @extend .btn-primary;
+  background: $input_back;
+  border-color: $input_back;
+  color: $primary;
+  &:hover {
+    background: $input_back;
+    color: $primary;
+    border-color: $input_back;
+  }
+}

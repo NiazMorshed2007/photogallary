@@ -60,7 +60,7 @@ const Home: FC = () => {
         </div>
       ) : (
         <div className="empty mt-4 d-flex align-items-center justify-content-center w-100 h-100 flex-column">
-          <img src={Empty} alt="" />
+          <img className="empty-image" src={Empty} alt="" />
           <h3>Create a Album to get started 🚀</h3>
           <Button
             onClick={() => {

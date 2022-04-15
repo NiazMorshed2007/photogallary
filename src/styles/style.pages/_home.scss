@@ -1,8 +1,8 @@
 .home {
   .albums-wrapper {
-
   }
-  img {
+  .empty-image {
     // @include wh(250px, 250px);
+    @include wh(280px, 280px);
   }
 }

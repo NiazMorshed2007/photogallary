@@ -32,9 +32,18 @@ const Album: FC<Props> = (props) => {
   return (
     <>
       <div className="album mb-5 shadow pointer">
-        <Link to={`/album/${album.id}`} state={{ album__id: album.id }}>
-          <img src={album.thumb} alt="" />
-        </Link>
+        <div className="thumb-wrapper position-relative">
+          <div className="position-absolute w-100 d-flex align-items-center justify-content-center h-100 top-0">
+            <span>Waiting....</span>
+          </div>
+          {!isPreviewMode ? (
+            <Link to={`/album/${album.id}`} state={{ album__id: album.id }}>
+              <img src={album.thumb} alt="" />
+            </Link>
+          ) : (
+            <img src={album.thumb} alt="" />
+          )}
+        </div>
         <div className="album__content d-flex align-items-center justify-content-between">
           <div className="left">
             <h6 className="title">{album.title}</h6>

@@ -1,21 +1,18 @@
 import React, { FC } from "react";
-import useStorage from "../hooks/useStorage";
 
 interface Props {
-  file: File;
+  progress: number;
 }
 
 const ProgressBar: FC<Props> = (props) => {
-  const { file } = props;
-  const { url, storageErr, progress } = useStorage(file);
+  const { progress } = props;
   return (
-    <>
-      <div
-        className="progress-bar"
-        style={{ height: "3px", background: "orange", width: progress + "px" }}
-      ></div>
-      <p>{url}</p>
-    </>
+    <div className="progress-bar-parent">
+      <span>Uploading image....({progress}% / 100%)</span>
+      <div className="progress-bar-wrapper">
+        <div className="juice" style={{ width: progress + "%" }}></div>
+      </div>
+    </div>
   );
 };
 export default ProgressBar;
