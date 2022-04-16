@@ -1,5 +1,5 @@
-import { Dropdown, Menu } from "antd";
-import React, { FC, useState } from "react";
+import { Button, Dropdown, Menu } from "antd";
+import React, { FC, FormEvent, FormEventHandler, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import { IAlbum } from "../interfaces/IAlbum";
@@ -19,7 +19,8 @@ interface Props {
 
 const Album: FC<Props> = (props) => {
   const { album, isPreviewMode } = props;
-  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [visible, setVisible] = useState<boolean>(false);
+  const [checked, setChecked] = useState<boolean>(false);
   const user_profile = useSelector((state: RootState) => {
     return state.user_profile;
   });
@@ -69,7 +70,7 @@ const Album: FC<Props> = (props) => {
                 </Menu.Item>
                 <Menu.Item icon={<FiEdit2 />}>Edit</Menu.Item>
                 <Menu.Item
-                  onClick={() => setIsVisible(true)}
+                  onClick={() => setVisible(true)}
                   icon={<AiOutlineDelete />}
                 >
                   Delete album
@@ -84,18 +85,57 @@ const Album: FC<Props> = (props) => {
         )}
       </div>
       <Modal
+        className="my-modal"
         onCancel={() => {
-          setIsVisible(false);
+          setVisible(false);
         }}
-        onOk={() => {
-          setIsVisible(false);
-          deleteAlbum();
-        }}
-        visible={isVisible}
+        onOk={() => setVisible(false)}
+        footer={false}
+        visible={visible}
+        closeIcon={<></>}
+        mask={false}
       >
-        <h3>
-          Are you sure you want to delete the album {album && album.title}?
-        </h3>
+        <div className="my-modal delete-modal shadow">
+          <h4 className="mb-2">Delete this Album</h4>
+          <p className="m-0">
+            You are about to <strong>permanently delete</strong> the
+            <span> album</span>
+            <span
+              onClick={() => setVisible(false)}
+              className="primary-color pointer px-1"
+            >
+              {album.title}
+            </span>
+          </p>
+          <form>
+            <label className="d-flex gap-1 align-items-center pt-2">
+              <input
+                type="checkbox"
+                onChange={() => setChecked && setChecked(!checked)}
+              />
+              I am aware that I <strong>cannot undo</strong> this.
+            </label>
+            <hr />
+            <p className="des">
+              Once you delete the album all of your photos will be deleted.
+            </p>
+
+            <div className="btn-wrapper pt-3 d-flex align-items-center justify-content-end gap-2">
+              <Button
+                className="delete-btn"
+                type="primary"
+                disabled={!checked}
+                danger={checked ? true : false}
+                onClick={deleteAlbum}
+              >
+                Delete
+              </Button>
+              <Button onClick={() => setVisible(false)} className="default-btn">
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </div>
       </Modal>
     </>
   );

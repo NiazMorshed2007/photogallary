@@ -1,2 +1,15 @@
 .photo {
+  // @include wh(280px, 280px);
+  width: 270px;
+  height: 225px;
+  background-color: $input_back;
+  .img-holder {
+  }
+  .img-wrapper {
+    @include wh(100%, 100%);
+    img {
+      @include wh(100%, 100%);
+      object-fit: cover;
+    }
+  }
 }

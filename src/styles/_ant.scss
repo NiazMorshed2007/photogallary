@@ -24,6 +24,7 @@
       .delete-modal {
         background: white !important;
         width: 450px;
+        font-family: $inter;
         // height: 271px;
         p,
         label {
@@ -38,7 +39,7 @@
       .add-image-modal {
         width: 690px;
         height: max-content;
-        transform: translate(-15%, 15%);
+        transform: translate(-15%, 5%);
       }
     }
   }

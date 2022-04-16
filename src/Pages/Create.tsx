@@ -1,7 +1,7 @@
 import { Button } from "antd";
 import { arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, FormEvent, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Album from "../components/Album";
@@ -37,7 +37,7 @@ const Create: FC = () => {
     contentType: "image/jpeg",
   };
   const docRef = doc(db, "users", user_profile.uid);
-  const upload_to_server = (): void => {
+  const upload_album = (): void => {
     if (albumName !== "" && file) {
       const uploadTask = uploadBytesResumable(storageRef, file, metadata);
       uploadTask.on(
@@ -90,6 +90,15 @@ const Create: FC = () => {
       );
     }
   };
+  const handleSubmit = (e: FormEvent): void => {
+    if (!uploading) {
+      e.preventDefault();
+      upload_album();
+    }
+  };
+  const handleChange = (e: any): void => {
+    setAlbumName(e.target.value);
+  };
   const uploader = (e: any): void => {
     const selected: File = e.target.files[0];
     console.log(selected);
@@ -134,17 +143,13 @@ const Create: FC = () => {
           <p className="mb-4 border-bottom w-75 pb-2">Set album info</p>
           <form
             className="w-75 d-flex flex-column gap-4"
-            onSubmit={(e) => {
-              e.preventDefault();
-            }}
+            onSubmit={handleSubmit}
           >
             <label>
               <input
                 required
                 value={albumName}
-                onChange={(e) => {
-                  setAlbumName(e.target.value);
-                }}
+                onChange={handleChange}
                 type="text"
               />
               <span>Album name</span>
@@ -156,23 +161,19 @@ const Create: FC = () => {
               </div>
             </label>
             {uploading && <ProgressBar progress={progress} />}
-            <div className="d-flex gap-3">
+            <div className="btn-wrapper d-flex gap-2 align-items-center justify-content-end pt-3">
               <Button
-                onClick={() => navigate(-1)}
-                size="large"
-                className="btn-secondary"
-              >
-                Cancel
-              </Button>
-              <Button
+                className="primary-btn-fill"
+                type="primary"
                 htmlType="submit"
-                size="large"
-                className="btn-primary"
-                onClick={() => {
-                  upload_to_server();
-                }}
+                disabled={
+                  albumName !== "" && file !== null && !uploading ? false : true
+                }
               >
                 Create
+              </Button>
+              <Button onClick={() => navigate(-1)} className="default-btn">
+                Cancel
               </Button>
             </div>
           </form>

@@ -6,7 +6,7 @@
 @mixin flex($d, $center) {
   display: flex;
   flex-direction: $d;
-  @if(center) {
+  @if (center) {
     align-items: center;
     justify-content: center;
   }
@@ -17,21 +17,24 @@
   @include wh($w, $h);
   user-select: none;
   border-radius: 8px;
-  background: rgba(#c6c1c1, .5);
+  background: rgba(#c6c1c1, 0.5);
   svg {
     font-size: 18px;
-    transition: all .055s ease-in-out;
+    transition: all 0.055s ease-in-out;
   }
 }
 
-@mixin primary_btn() {
-  border-radius: 20px;
-  background: $brandClr;
-  border-color: $brandClr;
-  color: white;
-  &:hover, &:focus {
+@mixin button($primary: false) {
+  outline: none;
+  background: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  border: $border-silver;
+  @if ($primary) {
+    color: $brandClr;
     border-color: $brandClr;
-    background-color: $brandClr;
-    box-shadow: none;
+  } @else {
+    color: rgba(0, 0, 0, 0.8);
+    border-color: rgba(0, 0, 0, 0.8);
   }
 }

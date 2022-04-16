@@ -2,18 +2,59 @@
   cursor: pointer;
 }
 
-.btn-primary {
-  @include primary_btn();
+.primary-color {
+  color: $brandClr;
 }
 
-.btn-secondary {
-  @extend .btn-primary;
-  background: $input_back;
-  border-color: $input_back;
-  color: $primary;
+.default-btn {
+  color: gray;
+  border-radius: 3px;
+  &:hover,
+  &:focus {
+    border-color: #dfdfdf;
+    color: gray;
+    background-color: rgba($color: #8a8a8a, $alpha: 0.11);
+  }
+}
+
+.danger-btn {
+  @extend .default-btn;
+  background: #ee4646;
+  color: white;
+  border-color: #f12425;
   &:hover {
-    background: $input_back;
-    color: $primary;
-    border-color: $input_back;
+    border-color: #f12425;
+    background: #f02d2d !important;
+    color: white;
+    opacity: 1;
+  }
+}
+
+.primary-btn {
+  @extend .default-btn;
+  background: transparent;
+  color: $brandClr;
+  border-color: $brandClr;
+  &:hover,
+  &:focus {
+    color: $brandClr;
+    border-color: $brandClr;
+    background: rgba($color: $brandClr, $alpha: 0.11);
+  }
+  &:focus {
+    background-color: transparent;
+  }
+}
+
+.primary-btn-fill {
+  @extend .primary-btn;
+  background: $brandClr;
+  color: white;
+  &:hover,
+  &:focus,
+  &:active {
+    background: rgba($color: $brandClr, $alpha: 0.9);
+    border-color: $brandClr;
+    color: white;
   }
 }

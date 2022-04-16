@@ -3,7 +3,7 @@ import Modal from "antd/lib/modal/Modal";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import * as _ from "lodash";
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, FormEvent, useEffect, useState } from "react";
 import { BsUiRadiosGrid } from "react-icons/bs";
 import { HiOutlinePlusSm } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,6 +11,7 @@ import { useParams } from "react-router-dom";
 import { setAlbums } from "../actions";
 import Empty from "../assets/empty1.svg";
 import Header from "../components/Header";
+import Photo from "../components/Photo";
 import ProgressBar from "../components/ProgressBar";
 import { db, storage } from "../firebase/firebase";
 import { dateFormatter } from "../functions/DateFormatter";
@@ -30,6 +31,12 @@ const PageAlbum: FC = () => {
   const [progress, setProgress] = useState<number>(0);
   const [url, setUrl] = useState<string>("");
   const [error, setError] = useState<string>("");
+  const showModal = (): void => {
+    setVisible(true);
+  };
+  const hideModal = (): void => {
+    setVisible(false);
+  };
   const user_profile: IProfile = useSelector((state: RootState) => {
     return state.user_profile;
   });
@@ -42,7 +49,7 @@ const PageAlbum: FC = () => {
   };
   const storageRef = ref(storage, "images/" + file?.name);
   const docRef = doc(db, "users", user_profile.uid);
-  const upload_to_server = (): void => {
+  const upload = (): void => {
     if (file) {
       const uploadTask = uploadBytesResumable(storageRef, file, metadata);
       uploadTask.on(
@@ -89,11 +96,15 @@ const PageAlbum: FC = () => {
             albums: user_albums,
           });
           setUploading(false);
-          setVisible(false);
+          hideModal();
           setFile(null);
         }
       );
     }
+  };
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    upload();
   };
   const fileChanger = (e: any): void => {
     const selected: File = e.target.files[0];
@@ -142,20 +153,18 @@ const PageAlbum: FC = () => {
   }, []);
   return (
     <>
-      <section className="page-album h-100">
+      <section className="page-album overflow-auto pb-4 h-100">
         <Header
           upper={
             <>
               <h3>{album && album.title}</h3>
               <div className="actions d-flex gap-3 align-items-center">
-                <div className="preview-option btn-header d-flex gap-2 align-items-center pointer">
+                {/* <div className="preview-option btn-header d-flex gap-2 align-items-center pointer">
                   <BsUiRadiosGrid />
                   <span>Show Preview</span>
-                </div>
+                </div> */}
                 <div
-                  onClick={() => {
-                    setVisible(true);
-                  }}
+                  onClick={showModal}
                   className="add-new-dir btn-header preview-option d-flex gap-1 align-items-center pointer"
                 >
                   <HiOutlinePlusSm />
@@ -177,13 +186,9 @@ const PageAlbum: FC = () => {
             {photos.length > 0 ? (
               <>
                 <p className="photos-title mb-3">Photos</p>
-                <div className="photos-wrapper d-flex align-items-center gap-2">
+                <div className="photos-wrapper flex-wrap d-flex align-items-center gap-2">
                   {photos &&
-                    photos.map((photo, i) => (
-                      <div key={i} className="img-holder">
-                        <img src={photo.photo__url} alt="" />
-                      </div>
-                    ))}
+                    photos.map((photo, i) => <Photo photo={photo} key={i} />)}
                 </div>
               </>
             ) : (
@@ -191,11 +196,8 @@ const PageAlbum: FC = () => {
                 <img src={Empty} alt="" />
                 <h3>Upload an image to see</h3>
                 <Button
-                  onClick={() => {
-                    setVisible(true);
-                  }}
-                  className="btn-primary mt-4 mb-5"
-                  size="large"
+                  onClick={showModal}
+                  className="primary-btn-fill mt-4 mb-5"
                 >
                   Add Image
                 </Button>
@@ -208,10 +210,10 @@ const PageAlbum: FC = () => {
         <Modal
           className="my-modal"
           onCancel={() => {
-            setVisible(false);
+            hideModal();
             setFile(null);
           }}
-          onOk={() => setVisible(false)}
+          onOk={hideModal}
           footer={false}
           visible={visible}
           closeIcon={<></>}
@@ -220,27 +222,28 @@ const PageAlbum: FC = () => {
           <div className="modal-wrapper position-fixed vw-100 vh-100 top-0">
             <div className="modal-content-wrapper">
               <div className={`modal-content shadow my-modal add-image-modal`}>
+                <form onSubmit={handleSubmit}>
+                  <input onChange={fileChanger} type="file" />
+                  {error !== "" && <p className="error">{error}</p>}
+                  {uploading && <ProgressBar progress={progress} />}
+                </form>
+                <img style={{ width: 280, height: 280 }} src={url} alt="" />
                 <div className="btn-wrapper d-flex gap-2 align-items-center justify-content-end pt-3">
-                  {/* <Button
-                  onClick={() => {
-                    tl.reverse();
-                  }}
-                  className="ant-default-btn"
+                  <Button
+                    className="primary-btn-fill"
+                    type="primary"
+                    htmlType="submit"
+                    disabled={file === null}
+                    // ={checked ? true : false}
                   >
-                  Cancel
-                </Button> */}
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      upload_to_server();
-                    }}
+                    Upload
+                  </Button>
+                  <Button
+                    onClick={() => setVisible(false)}
+                    className="default-btn"
                   >
-                    <input onChange={fileChanger} type="file" />
-                    {error !== "" && <p className="error">{error}</p>}
-                    {uploading && <ProgressBar progress={progress} />}
-                    <Button onClick={() => upload_to_server()}>Upload</Button>
-                  </form>
-                  <img style={{ width: 280, height: 280 }} src={url} alt="" />
+                    Cancel
+                  </Button>
                 </div>
               </div>
             </div>

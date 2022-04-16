@@ -144,7 +144,7 @@ const Layout: FC<Props> = (props) => {
         // style={{ pointerEvents: "none", background: "white" }}
       ></div> */}
       <Sidebar />
-      <main className="content w-100 pt-3">{children}</main>
+      <main className="content w-100">{children}</main>
     </main>
   );
 };

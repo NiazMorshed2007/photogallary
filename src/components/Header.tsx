@@ -8,7 +8,7 @@ interface Props {
 const Header: FC<Props> = (props) => {
   const { upper, down } = props;
   return (
-    <header className="main-header px-5 pb-2 w-100">
+    <header className="main-header px-5 py-2 pt-3 w-100">
       <div className="upper d-flex align-items-center justify-content-between">
         {upper}
       </div>

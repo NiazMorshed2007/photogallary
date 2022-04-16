@@ -1,17 +1,13 @@
 .page-album {
-  // .empty {
-  img {
-    @include wh(250px, 220px);
-    object-fit: fill;
-    // }
+  .empty {
+    img {
+      @include wh(250px, 220px);
+      object-fit: fill;
+    }
   }
   main {
     .photos-title {
       font-weight: 500;
-    }
-    .img-holder {
-      @include wh(250px, 220px);
-      background-color: black;
     }
   }
 }
