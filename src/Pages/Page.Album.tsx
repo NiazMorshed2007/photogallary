@@ -1,29 +1,32 @@
-import React, { FC, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import * as _ from "lodash";
-import { IAlbum } from "../interfaces/IAlbum";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../reducers";
-import Header from "../components/Header";
 import { Button } from "antd";
-import Empty from "../assets/empty1.svg";
 import Modal from "antd/lib/modal/Modal";
-import { storage, db } from "../firebase/firebase";
+import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { doc, updateDoc } from "firebase/firestore";
-import { IProfile } from "../interfaces/IProfile";
-import { dateFormatter } from "../functions/DateFormatter";
-import { setAlbums } from "../actions";
+import * as _ from "lodash";
+import React, { FC, useEffect, useState } from "react";
 import { BsUiRadiosGrid } from "react-icons/bs";
 import { HiOutlinePlusSm } from "react-icons/hi";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { setAlbums } from "../actions";
+import Empty from "../assets/empty1.svg";
+import Header from "../components/Header";
 import ProgressBar from "../components/ProgressBar";
+import { db, storage } from "../firebase/firebase";
+import { dateFormatter } from "../functions/DateFormatter";
+import { IAlbum } from "../interfaces/IAlbum";
+import { IPhoto } from "../interfaces/IPhoto";
+import { IProfile } from "../interfaces/IProfile";
+import { RootState } from "../reducers";
 
 const PageAlbum: FC = () => {
   const [visible, setVisible] = useState<boolean>(false);
   const types: String[] = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
+  const [photos, setPhotos] = useState<IPhoto[]>([]);
   const [file, setFile] = useState<any>(null);
   const dispatch = useDispatch();
   const [uploading, setUploading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [progress, setProgress] = useState<number>(0);
   const [url, setUrl] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -122,6 +125,21 @@ const PageAlbum: FC = () => {
       setUrl("");
     }
   }, [file]);
+  useEffect(() => {
+    const getPhotos = async (): Promise<void> => {
+      setLoading(true);
+      if (user_profile.uid !== "" && loading) {
+        const snap = onSnapshot(doc(db, "users/" + user_profile.uid), (doc) => {
+          const photos_data = doc.data()?.albums.find((album: any) => {
+            return album.id === album__id;
+          }).photos;
+          setPhotos(photos_data);
+          setLoading(false);
+        });
+      }
+    };
+    getPhotos();
+  }, []);
   return (
     <>
       <section className="page-album h-100">
@@ -152,33 +170,39 @@ const PageAlbum: FC = () => {
             </>
           }
         />
-        <main className="px-5 pt-3 h-100 w-100">
-          {album?.photos.length > 0 ? (
-            <>
-              <p>photos</p>
-              <div className="photos-wrapper d-flex align-items-center gap-2">
-                {album.photos &&
-                  album.photos.map((photo, i) => (
-                    <img src={photo.photo__url} key={i} alt="" />
-                  ))}
+        {loading ? (
+          <>loading .. .. . .</>
+        ) : (
+          <main className="px-5 pt-3 h-100 w-100">
+            {photos.length > 0 ? (
+              <>
+                <p className="photos-title mb-3">Photos</p>
+                <div className="photos-wrapper d-flex align-items-center gap-2">
+                  {photos &&
+                    photos.map((photo, i) => (
+                      <div key={i} className="img-holder">
+                        <img src={photo.photo__url} alt="" />
+                      </div>
+                    ))}
+                </div>
+              </>
+            ) : (
+              <div className="empty pb-5 d-flex align-items-center justify-content-center w-100 h-100 flex-column">
+                <img src={Empty} alt="" />
+                <h3>Upload an image to see</h3>
+                <Button
+                  onClick={() => {
+                    setVisible(true);
+                  }}
+                  className="btn-primary mt-4 mb-5"
+                  size="large"
+                >
+                  Add Image
+                </Button>
               </div>
-            </>
-          ) : (
-            <div className="empty pb-5 d-flex align-items-center justify-content-center w-100 h-100 flex-column">
-              <img src={Empty} alt="" />
-              <h3>Upload an image to see</h3>
-              <Button
-                onClick={() => {
-                  setVisible(true);
-                }}
-                className="btn-primary mt-4 mb-5"
-                size="large"
-              >
-                Add Image
-              </Button>
-            </div>
-          )}
-        </main>
+            )}
+          </main>
+        )}
       </section>
       {visible && (
         <Modal
