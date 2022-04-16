@@ -2,7 +2,7 @@ import React, { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import * as _ from "lodash";
 import { IAlbum } from "../interfaces/IAlbum";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../reducers";
 import Header from "../components/Header";
 import { Button } from "antd";
@@ -12,11 +12,17 @@ import { storage, db } from "../firebase/firebase";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { doc, updateDoc } from "firebase/firestore";
 import { IProfile } from "../interfaces/IProfile";
+import { dateFormatter } from "../functions/DateFormatter";
+import { setAlbums } from "../actions";
+import { BsUiRadiosGrid } from "react-icons/bs";
+import { HiOutlinePlusSm } from "react-icons/hi";
+import ProgressBar from "../components/ProgressBar";
 
 const PageAlbum: FC = () => {
   const [visible, setVisible] = useState<boolean>(false);
   const types: String[] = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
   const [file, setFile] = useState<any>(null);
+  const dispatch = useDispatch();
   const [uploading, setUploading] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
   const [url, setUrl] = useState<string>("");
@@ -31,7 +37,7 @@ const PageAlbum: FC = () => {
   const metadata = {
     contentType: "image/jpeg",
   };
-  const storageRef = ref(storage, "albums-images/" + file?.name);
+  const storageRef = ref(storage, "images/" + file?.name);
   const docRef = doc(db, "users", user_profile.uid);
   const upload_to_server = (): void => {
     if (file) {
@@ -69,18 +75,19 @@ const PageAlbum: FC = () => {
               return downloadURL;
             }
           );
-          // updateDoc(docRef, {
-          //   albums: arrayUnion({
-          //     photos: [],
-          //     thumb: URL,
-          //     title: albumName,
-          //     id: albumName.toLocaleLowerCase(),
-          //     date: dateFormatter("m/d/y"),
-          //     timestamp: new Date(),
-          //   }),
-          // });
+          album.photos.push({
+            photo__name: "name",
+            photo__url: URL,
+            photo__id: "adsf",
+            date: dateFormatter("m/h/d/m"),
+          });
+          dispatch(setAlbums([...user_albums]));
+          updateDoc(docRef, {
+            albums: user_albums,
+          });
           setUploading(false);
           setVisible(false);
+          setFile(null);
         }
       );
     }
@@ -122,6 +129,21 @@ const PageAlbum: FC = () => {
           upper={
             <>
               <h3>{album && album.title}</h3>
+              <div className="actions d-flex gap-3 align-items-center">
+                <div className="preview-option btn-header d-flex gap-2 align-items-center pointer">
+                  <BsUiRadiosGrid />
+                  <span>Show Preview</span>
+                </div>
+                <div
+                  onClick={() => {
+                    setVisible(true);
+                  }}
+                  className="add-new-dir btn-header preview-option d-flex gap-1 align-items-center pointer"
+                >
+                  <HiOutlinePlusSm />
+                  <span>Add new</span>
+                </div>
+              </div>
             </>
           }
           down={
@@ -132,7 +154,15 @@ const PageAlbum: FC = () => {
         />
         <main className="px-5 pt-3 h-100 w-100">
           {album?.photos.length > 0 ? (
-            <>photos</>
+            <>
+              <p>photos</p>
+              <div className="photos-wrapper d-flex align-items-center gap-2">
+                {album.photos &&
+                  album.photos.map((photo, i) => (
+                    <img src={photo.photo__url} key={i} alt="" />
+                  ))}
+              </div>
+            </>
           ) : (
             <div className="empty pb-5 d-flex align-items-center justify-content-center w-100 h-100 flex-column">
               <img src={Empty} alt="" />
@@ -150,45 +180,49 @@ const PageAlbum: FC = () => {
           )}
         </main>
       </section>
-      <Modal
-        className="my-modal"
-        onCancel={() => {
-          setVisible(false);
-          setFile(null);
-        }}
-        onOk={() => setVisible(false)}
-        footer={false}
-        visible={visible}
-        closeIcon={<></>}
-        mask={false}
-      >
-        <div className="modal-wrapper position-fixed vw-100 vh-100 top-0">
-          <div className="modal-content-wrapper">
-            <div className={`modal-content shadow my-modal add-image-modal`}>
-              <div className="btn-wrapper d-flex gap-2 align-items-center justify-content-end pt-3">
-                {/* <Button
+      {visible && (
+        <Modal
+          className="my-modal"
+          onCancel={() => {
+            setVisible(false);
+            setFile(null);
+          }}
+          onOk={() => setVisible(false)}
+          footer={false}
+          visible={visible}
+          closeIcon={<></>}
+          mask={false}
+        >
+          <div className="modal-wrapper position-fixed vw-100 vh-100 top-0">
+            <div className="modal-content-wrapper">
+              <div className={`modal-content shadow my-modal add-image-modal`}>
+                <div className="btn-wrapper d-flex gap-2 align-items-center justify-content-end pt-3">
+                  {/* <Button
                   onClick={() => {
                     tl.reverse();
                   }}
                   className="ant-default-btn"
-                >
+                  >
                   Cancel
                 </Button> */}
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                  }}
-                >
-                  <input onChange={fileChanger} type="file" />
-                  {error !== "" && <p className="error">{error}</p>}
-                  <Button>Upload</Button>
-                </form>
-                <img style={{ width: 280, height: 280 }} src={url} alt="" />
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      upload_to_server();
+                    }}
+                  >
+                    <input onChange={fileChanger} type="file" />
+                    {error !== "" && <p className="error">{error}</p>}
+                    {uploading && <ProgressBar progress={progress} />}
+                    <Button onClick={() => upload_to_server()}>Upload</Button>
+                  </form>
+                  <img style={{ width: 280, height: 280 }} src={url} alt="" />
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </Modal>
+        </Modal>
+      )}
     </>
   );
 };

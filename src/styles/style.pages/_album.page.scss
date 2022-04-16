@@ -1,7 +1,8 @@
 .page-album {
-    .empty {
-        img {
-            @include wh(280px, 280px);
-        }
-    }
+  // .empty {
+  img {
+    @include wh(190px, 190px);
+    object-fit: fill;
+    // }
+  }
 }

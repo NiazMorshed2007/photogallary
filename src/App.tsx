@@ -50,16 +50,19 @@ const App: FC = () => {
     const getData = async (): Promise<void> => {
       if (user_profile.uid !== "" && !loading) {
         const unsub = onSnapshot(
-          doc(db, "users", user_profile.uid, "albums"),
+          doc(db, "users/" + user_profile.uid),
           (doc) => {
-            console.log("Current data: ", doc.data());
             const user_data: DocumentData = [];
-            // user_data.push(doc.data());
-            console.log(doc.data());
-
-            // dispatch(setAlbums(user_data[0].albums ? user_data[0].albums : []));111
+            user_data.push(doc.data());
+            dispatch(setAlbums(user_data[0].albums ? user_data[0].albums : []));
           }
         );
+        // const albums__data = onSnapshot(
+        //   doc(db, "users", user_profile.uid, "albums/sdaf"),
+        //   (doc) => {
+        //     console.log("Current data: ", doc.data());
+        //   }
+        // );
       }
     };
     getData();
