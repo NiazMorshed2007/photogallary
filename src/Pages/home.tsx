@@ -63,25 +63,13 @@ const Home: FC = () => {
           <img className="empty-image" src={Empty} alt="" />
           <h3>Create a Album to get started 🚀</h3>
           <Button
-            onClick={() => {
-              navigate("/create");
-            }}
-            className="btn-primary mt-4"
-            size="large"
+            onClick={() => navigate("/create")}
+            className="primary-btn-fill mt-4 mb-5"
           >
             Create
           </Button>
         </div>
       )}
-      {/* {albums.map((album) => (
-          <Album
-            key={album.id}
-            id={album.id}
-            img__src={album.picture}
-            title={album.title}
-            date={album.date}
-          />
-        ))} */}
     </section>
   );
 };

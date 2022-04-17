@@ -1,0 +1,16 @@
+.loading-screen {
+  background-color: rgba($color: white, $alpha: 0.7);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  .loader {
+    @include wh(50px, 50px);
+    border: 2px solid $brandClr;
+    border-radius: 50%;
+    border-top: none;
+  }
+}
+
+@keyframes load {
+  50% {
+  }
+}

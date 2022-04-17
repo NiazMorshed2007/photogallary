@@ -86,10 +86,8 @@ const PageAlbum: FC = () => {
             }
           );
           album.photos.push({
-            photo__name: "name",
             photo__url: URL,
-            photo__id: "adsf",
-            date: dateFormatter("m/h/d/m"),
+            photo__id: (Math.random() * 15252120324).toString(),
           });
           dispatch(setAlbums([...user_albums]));
           updateDoc(docRef, {
@@ -183,12 +181,14 @@ const PageAlbum: FC = () => {
           <>loading .. .. . .</>
         ) : (
           <main className="px-5 pt-3 h-100 w-100">
-            {photos.length > 0 ? (
+            {photos && photos.length > 0 ? (
               <>
                 <p className="photos-title mb-3">Photos</p>
                 <div className="photos-wrapper flex-wrap d-flex align-items-center gap-2">
                   {photos &&
-                    photos.map((photo, i) => <Photo photo={photo} key={i} />)}
+                    photos.map((photo, i) => (
+                      <Photo album={album} photo={photo} key={i} />
+                    ))}
                 </div>
               </>
             ) : (
@@ -226,25 +226,25 @@ const PageAlbum: FC = () => {
                   <input onChange={fileChanger} type="file" />
                   {error !== "" && <p className="error">{error}</p>}
                   {uploading && <ProgressBar progress={progress} />}
+                  <img style={{ width: 280, height: 280 }} src={url} alt="" />
+                  <div className="btn-wrapper d-flex gap-2 align-items-center justify-content-end pt-3">
+                    <Button
+                      className="primary-btn-fill"
+                      type="primary"
+                      htmlType="submit"
+                      disabled={file === null}
+                      // ={checked ? true : false}
+                    >
+                      Upload
+                    </Button>
+                    <Button
+                      onClick={() => setVisible(false)}
+                      className="default-btn"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
                 </form>
-                <img style={{ width: 280, height: 280 }} src={url} alt="" />
-                <div className="btn-wrapper d-flex gap-2 align-items-center justify-content-end pt-3">
-                  <Button
-                    className="primary-btn-fill"
-                    type="primary"
-                    htmlType="submit"
-                    disabled={file === null}
-                    // ={checked ? true : false}
-                  >
-                    Upload
-                  </Button>
-                  <Button
-                    onClick={() => setVisible(false)}
-                    className="default-btn"
-                  >
-                    Cancel
-                  </Button>
-                </div>
               </div>
             </div>
           </div>

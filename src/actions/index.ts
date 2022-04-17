@@ -1,6 +1,6 @@
 import { IAlbum } from "../interfaces/IAlbum"
 import { IProfile } from "../interfaces/IProfile"
-import { SET_ALBUMS, SET_LOGGED, SET_PROFILE } from "./ActionTypes"
+import { SET_ALBUMS, SET_LOADING, SET_LOGGED, SET_PROFILE } from "./ActionTypes"
 
 
 export const setLogged = (bool: boolean) => {
@@ -8,6 +8,16 @@ export const setLogged = (bool: boolean) => {
         type: SET_LOGGED,
         payload: {
             val: bool,
+        }
+    }
+}
+
+
+export const setLoading = (bool: boolean) => {
+    return {
+        type: SET_LOADING,
+        payload: {
+            val: bool
         }
     }
 }

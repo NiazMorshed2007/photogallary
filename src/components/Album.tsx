@@ -1,15 +1,16 @@
 import { Button, Dropdown, Menu } from "antd";
-import React, { FC, FormEvent, FormEventHandler, useState } from "react";
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { Link } from "react-router-dom";
-import { IAlbum } from "../interfaces/IAlbum";
-import { MdOutlineFavoriteBorder } from "react-icons/md";
-import { FiEdit2 } from "react-icons/fi";
-import { AiOutlineDelete } from "react-icons/ai";
 import Modal from "antd/lib/modal/Modal";
 import { arrayRemove, doc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase/firebase";
+import { deleteObject, ref } from "firebase/storage";
+import React, { FC, useState } from "react";
+import { AiOutlineDelete } from "react-icons/ai";
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { FiEdit2 } from "react-icons/fi";
+import { MdOutlineFavoriteBorder } from "react-icons/md";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { db, storage } from "../firebase/firebase";
+import { IAlbum } from "../interfaces/IAlbum";
 import { RootState } from "../reducers";
 
 interface Props {
@@ -24,11 +25,20 @@ const Album: FC<Props> = (props) => {
   const user_profile = useSelector((state: RootState) => {
     return state.user_profile;
   });
-  const deleteAlbum = async (): Promise<void> => {
+  const deleteAlbum = (): void => {
     const docRef = doc(db, "users", user_profile.uid);
-    await updateDoc(docRef, {
-      albums: arrayRemove(album),
-    });
+    const album_thumbRef = ref(storage, album.thumb);
+    const album_photosRef = ref(storage);
+    deleteObject(album_thumbRef)
+      .then(() => {
+        updateDoc(docRef, {
+          albums: arrayRemove(album),
+        });
+        setVisible(false);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   return (
     <>
@@ -111,6 +121,7 @@ const Album: FC<Props> = (props) => {
             <label className="d-flex gap-1 align-items-center pt-2">
               <input
                 type="checkbox"
+                checked={checked}
                 onChange={() => setChecked && setChecked(!checked)}
               />
               I am aware that I <strong>cannot undo</strong> this.

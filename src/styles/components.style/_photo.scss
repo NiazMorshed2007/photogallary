@@ -1,12 +1,41 @@
 .photo {
   // @include wh(280px, 280px);
-  width: 270px;
-  height: 225px;
+  width: 290px;
+  height: 245px;
   background-color: $input_back;
+  border-radius: 9px;
+  overflow: hidden;
+  &:hover {
+    .img-wrapper {
+      i {
+        opacity: 1;
+      }
+    }
+  }
   .img-holder {
   }
   .img-wrapper {
     @include wh(100%, 100%);
+    i {
+      position: absolute;
+      top: 9px;
+      border-radius: 50%;
+      background: rgb(238, 238, 238);
+      @include wh(30px, 30px);
+      @include flex(row, $center: true);
+      cursor: pointer;
+      opacity: 0;
+      transition: all 0.3s ease-in-out;
+    }
+    .heart-icon {
+      left: 10px;
+    }
+    .delete-icon {
+      left: 48px;
+    }
+    .expand-icon {
+      right: 8px;
+    }
     img {
       @include wh(100%, 100%);
       object-fit: cover;
