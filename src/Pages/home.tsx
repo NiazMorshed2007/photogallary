@@ -1,6 +1,6 @@
 import { Button } from "antd";
-import React, { FC } from "react";
-import { useSelector } from "react-redux";
+import React, { FC, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Empty from "../assets/empty1.svg";
 import Header from "../components/Header";
@@ -9,12 +9,19 @@ import { BsUiRadiosGrid } from "react-icons/bs";
 import { HiOutlinePlusSm } from "react-icons/hi";
 import Album from "../components/Album";
 import { IAlbum } from "../interfaces/IAlbum";
+import { setLoading } from "../actions";
 
 const Home: FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const user_albums: IAlbum[] = useSelector((state: RootState) => {
     return state.user_albums;
   });
+  useEffect(() => {
+    setTimeout(() => {
+      dispatch(setLoading(false));
+    }, 2000);
+  }, []);
   return (
     <section className="home pb-5 mb-3 overflow-auto h-100">
       <Header

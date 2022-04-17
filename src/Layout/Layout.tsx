@@ -17,7 +17,7 @@ const Layout: FC<Props> = (props) => {
   });
   return (
     <main className="layout d-flex vh-100 vw-100">
-      <LoadingScreen loading={loading} />
+      {loading && <LoadingScreen loading={loading} />}
       <Sidebar />
       <main className="content w-100">{children}</main>
     </main>

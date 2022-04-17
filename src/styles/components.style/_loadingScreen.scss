@@ -7,10 +7,16 @@
     border: 2px solid $brandClr;
     border-radius: 50%;
     border-top: none;
+    animation: load 1.5s linear infinite;
   }
 }
 
 @keyframes load {
   50% {
+    transform: rotate(360deg);
+  }
+  0%,
+  100% {
+    transform: rotate(0deg);
   }
 }

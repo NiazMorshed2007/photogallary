@@ -4,30 +4,33 @@ import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import * as _ from "lodash";
 import React, { FC, FormEvent, useEffect, useState } from "react";
-import { BsUiRadiosGrid } from "react-icons/bs";
 import { HiOutlinePlusSm } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { setAlbums } from "../actions";
+import { setAlbums, setLoading } from "../actions";
 import Empty from "../assets/empty1.svg";
 import Header from "../components/Header";
 import Photo from "../components/Photo";
 import ProgressBar from "../components/ProgressBar";
 import { db, storage } from "../firebase/firebase";
-import { dateFormatter } from "../functions/DateFormatter";
 import { IAlbum } from "../interfaces/IAlbum";
 import { IPhoto } from "../interfaces/IPhoto";
 import { IProfile } from "../interfaces/IProfile";
 import { RootState } from "../reducers";
 
-const PageAlbum: FC = () => {
+interface Props {
+  loading_prop: boolean;
+}
+
+const PageAlbum: FC<Props> = (props) => {
+  const { loading_prop } = props;
   const [visible, setVisible] = useState<boolean>(false);
   const types: String[] = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
   const [photos, setPhotos] = useState<IPhoto[]>([]);
   const [file, setFile] = useState<any>(null);
   const dispatch = useDispatch();
   const [uploading, setUploading] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(true);
+  // const [loading, setLoading] = useState<boolean>(true);
   const [progress, setProgress] = useState<number>(0);
   const [url, setUrl] = useState<string>("");
   const [error, setError] = useState<string>("");
@@ -39,6 +42,9 @@ const PageAlbum: FC = () => {
   };
   const user_profile: IProfile = useSelector((state: RootState) => {
     return state.user_profile;
+  });
+  const loading: boolean = useSelector((state: RootState) => {
+    return state.loading;
   });
   const user_albums: IAlbum[] = useSelector((state: RootState) => {
     return state.user_albums;
@@ -136,14 +142,15 @@ const PageAlbum: FC = () => {
   }, [file]);
   useEffect(() => {
     const getPhotos = async (): Promise<void> => {
-      setLoading(true);
-      if (user_profile.uid !== "" && loading) {
+      dispatch(setLoading(true));
+      if (user_profile.uid !== "") {
         const snap = onSnapshot(doc(db, "users/" + user_profile.uid), (doc) => {
           const photos_data = doc.data()?.albums.find((album: any) => {
             return album.id === album__id;
           }).photos;
           setPhotos(photos_data);
-          setLoading(false);
+          dispatch(setLoading(false));
+          console.log("gfsdfg");
         });
       }
     };
@@ -177,34 +184,30 @@ const PageAlbum: FC = () => {
             </>
           }
         />
-        {loading ? (
-          <>loading .. .. . .</>
-        ) : (
-          <main className="px-5 pt-3 h-100 w-100">
-            {photos && photos.length > 0 ? (
-              <>
-                <p className="photos-title mb-3">Photos</p>
-                <div className="photos-wrapper flex-wrap d-flex align-items-center gap-2">
-                  {photos &&
-                    photos.map((photo, i) => (
-                      <Photo album={album} photo={photo} key={i} />
-                    ))}
-                </div>
-              </>
-            ) : (
-              <div className="empty pb-5 d-flex align-items-center justify-content-center w-100 h-100 flex-column">
-                <img src={Empty} alt="" />
-                <h3>Upload an image to see</h3>
-                <Button
-                  onClick={showModal}
-                  className="primary-btn-fill mt-4 mb-5"
-                >
-                  Add Image
-                </Button>
+        <main className="px-5 pt-3 h-100 w-100">
+          {photos && photos.length > 0 ? (
+            <>
+              <p className="photos-title mb-3">Photos</p>
+              <div className="photos-wrapper flex-wrap d-flex align-items-center gap-2">
+                {photos &&
+                  photos.map((photo, i) => (
+                    <Photo album={album} photo={photo} key={i} />
+                  ))}
               </div>
-            )}
-          </main>
-        )}
+            </>
+          ) : (
+            <div className="empty pb-5 d-flex align-items-center justify-content-center w-100 h-100 flex-column">
+              <img src={Empty} alt="" />
+              <h3>Upload an image to see</h3>
+              <Button
+                onClick={showModal}
+                className="primary-btn-fill mt-4 mb-5"
+              >
+                Add Image
+              </Button>
+            </div>
+          )}
+        </main>
       </section>
       {visible && (
         <Modal
