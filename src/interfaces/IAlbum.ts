@@ -6,4 +6,5 @@ export interface IAlbum {
     title: string,
     date: string,
     photos: IPhoto[],
+    favorite: boolean,
 }

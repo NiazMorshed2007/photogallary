@@ -18,10 +18,11 @@ const { Paragraph } = Typography;
 interface Props {
   album: IAlbum;
   isPreviewMode: boolean;
+  onFav: () => void;
 }
 
 const Album: FC<Props> = (props) => {
-  const { album, isPreviewMode } = props;
+  const { album, isPreviewMode, onFav } = props;
   const [visible, setVisible] = useState<boolean>(false);
   const [checked, setChecked] = useState<boolean>(false);
   const user_profile = useSelector((state: RootState) => {
@@ -73,8 +74,10 @@ const Album: FC<Props> = (props) => {
             <span className="date">{album.date}</span>
           </div>
           <div className="right d-flex align-items-center gap-3">
-            <i>
-              <MdOutlineFavoriteBorder />
+            <i onClick={onFav}>
+              <MdOutlineFavoriteBorder
+                style={{ color: album.favorite ? "red" : "" }}
+              />
             </i>
             <i>
               <FiEdit2 />

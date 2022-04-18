@@ -9,7 +9,11 @@ import { BsUiRadiosGrid } from "react-icons/bs";
 import { HiOutlinePlusSm } from "react-icons/hi";
 import Album from "../components/Album";
 import { IAlbum } from "../interfaces/IAlbum";
-import { setLoading } from "../actions";
+import { setAlbums, setLoading } from "../actions";
+import * as _ from "lodash";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../firebase/firebase";
+import { IProfile } from "../interfaces/IProfile";
 
 const Home: FC = () => {
   const navigate = useNavigate();
@@ -17,6 +21,22 @@ const Home: FC = () => {
   const user_albums: IAlbum[] = useSelector((state: RootState) => {
     return state.user_albums;
   });
+  const user_profile: IProfile = useSelector((state: RootState) => {
+    return state.user_profile;
+  });
+  const docRef = doc(db, "users", user_profile.uid);
+  const setFavorite = (id: string): void => {
+    const album_index: number =
+      user_albums &&
+      _.findIndex(user_albums, (album) => {
+        return album.id === id;
+      })!;
+    user_albums[album_index].favorite = !user_albums[album_index].favorite;
+    dispatch(setAlbums([...user_albums]));
+    updateDoc(docRef, {
+      albums: user_albums,
+    });
+  };
   useEffect(() => {
     setTimeout(() => {
       dispatch(setLoading(false));
@@ -60,7 +80,14 @@ const Home: FC = () => {
           <div>
             <div className="albums-wrapper px-5 d-flex align-items-center justify-content-around flex-wrap pt-4 mt-2">
               {user_albums.map((album) => (
-                <Album isPreviewMode={false} key={album.id} album={album} />
+                <Album
+                  onFav={() => {
+                    setFavorite(album.id);
+                  }}
+                  isPreviewMode={false}
+                  key={album.id}
+                  album={album}
+                />
               ))}
             </div>
           </div>

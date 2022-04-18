@@ -15,6 +15,7 @@ import { RootState } from "../reducers";
 
 const Create: FC = () => {
   const [file, setFile] = useState<any>(null);
+  const [favorite, setFavorite] = useState<boolean>(false);
   const [url, setUrl] = useState<string>("");
   const [progress, setProgress] = useState<number>(0);
   const [uploading, setUploading] = useState<boolean>(false);
@@ -25,12 +26,16 @@ const Create: FC = () => {
   const user_profile: IProfile = useSelector((state: RootState) => {
     return state.user_profile;
   });
+  const setFavFunc = (): void => {
+    setFavorite(!favorite);
+  };
   const types: String[] = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
   const preview_album: IAlbum = {
     title: albumName !== "" ? albumName : "--- ---- --- --- ---",
     id: albumName.toLocaleLowerCase(),
     photos: [],
     thumb: url,
+    favorite: favorite,
     date: dateFormatter("m/d/y"),
   };
   const metadata = {
@@ -180,7 +185,11 @@ const Create: FC = () => {
         </div>
         <div className="preview w-50 h-100">
           <p className="mb-3">Preview</p>
-          <Album isPreviewMode={true} album={preview_album} />
+          <Album
+            onFav={setFavFunc}
+            isPreviewMode={true}
+            album={preview_album}
+          />
         </div>
       </main>
     </section>

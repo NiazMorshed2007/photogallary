@@ -1,6 +1,7 @@
 import { Button, Modal } from "antd";
 import { doc, updateDoc } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
+import * as _ from "lodash";
 import React, { FC, useState } from "react";
 import { AiOutlineDelete, AiOutlineHeart } from "react-icons/ai";
 import { BsArrowsAngleExpand } from "react-icons/bs";
@@ -45,7 +46,9 @@ const Photo: FC<Props> = (props) => {
       const del_index: number =
         album &&
         album.photos &&
-        album.photos.map((photo) => photo.photo__id).indexOf(selectedPhotoId);
+        _.findIndex(album.photos, (photo) => {
+          return photo.photo__id === selectedPhotoId;
+        });
       album.photos.splice(del_index, 1);
       dispatch(setAlbums([...user_albums]));
       deleteObject(del_imgRef)
