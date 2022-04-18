@@ -9,6 +9,7 @@ import { IProfile } from "./interfaces/IProfile";
 import Layout from "./Layout/Layout";
 import Auth from "./Pages/Auth";
 import Create from "./Pages/Create";
+import Favorite from "./Pages/Favorites";
 import Home from "./Pages/home";
 import PageAlbum from "./Pages/Page.Album";
 import { RootState } from "./reducers";
@@ -80,6 +81,7 @@ const App: FC = () => {
                 <Route path={"/"} element={<Home />} />
                 <Route path={"/album/:album__id"} element={<PageAlbum />} />
                 <Route path="/create" element={<Create />} />
+                <Route path="/favorites" element={<Favorite />} />
               </Routes>
             </Layout>
           ) : (
