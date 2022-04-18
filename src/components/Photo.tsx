@@ -1,24 +1,25 @@
 import { Button, Modal } from "antd";
-import React, { FC, useState } from "react";
-import { IPhoto } from "../interfaces/IPhoto";
-import { BsArrowsAngleExpand } from "react-icons/bs";
-import { AiOutlineHeart, AiOutlineDelete } from "react-icons/ai";
-import { IAlbum } from "../interfaces/IAlbum";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../reducers";
-import { setAlbums } from "../actions";
 import { doc, updateDoc } from "firebase/firestore";
-import { db, storage } from "../firebase/firebase";
-import { IProfile } from "../interfaces/IProfile";
 import { deleteObject, ref } from "firebase/storage";
+import React, { FC, useState } from "react";
+import { AiOutlineDelete, AiOutlineHeart } from "react-icons/ai";
+import { BsArrowsAngleExpand } from "react-icons/bs";
+import { useDispatch, useSelector } from "react-redux";
+import { setAlbums } from "../actions";
+import { db, storage } from "../firebase/firebase";
+import { IAlbum } from "../interfaces/IAlbum";
+import { IPhoto } from "../interfaces/IPhoto";
+import { IProfile } from "../interfaces/IProfile";
+import { RootState } from "../reducers";
 
 interface Props {
   photo: IPhoto;
   album: IAlbum;
+  onFuction: () => void;
 }
 
 const Photo: FC<Props> = (props) => {
-  const { photo, album } = props;
+  const { photo, album, onFuction } = props;
   const [visible, setVisible] = useState<boolean>(false);
   const [checked, setChecked] = useState<boolean>(false);
   const user_albums: IAlbum[] = useSelector((state: RootState) => {
@@ -30,6 +31,7 @@ const Photo: FC<Props> = (props) => {
   const dispatch = useDispatch();
   const [selectedPhotoId, setSelectedPhotoId] = useState<string>("");
   const [selectedPhotoURL, setSelectedPhotoURL] = useState<string>("");
+
   const showDeleteModal = (): void => {
     setVisible(true);
   };
@@ -40,9 +42,10 @@ const Photo: FC<Props> = (props) => {
     if (selectedPhotoId !== "") {
       const docRef = doc(db, "users", user_profile.uid);
       const del_imgRef = ref(storage, selectedPhotoURL);
-      const del_index = album.photos
-        .map((photo) => photo.photo__id)
-        .indexOf(selectedPhotoId);
+      const del_index: number =
+        album &&
+        album.photos &&
+        album.photos.map((photo) => photo.photo__id).indexOf(selectedPhotoId);
       album.photos.splice(del_index, 1);
       dispatch(setAlbums([...user_albums]));
       deleteObject(del_imgRef)
@@ -57,12 +60,13 @@ const Photo: FC<Props> = (props) => {
         });
     }
   };
+
   return (
     <>
-      <div className="photo pointer">
+      <div className="photo pointer shadow">
         <div className="img-placeholder"></div>
         <div className="img-wrapper position-relative">
-          <i className="expand-icon">
+          <i onClick={onFuction} className="expand-icon">
             <BsArrowsAngleExpand />
           </i>
           <i className="heart-icon">
@@ -112,7 +116,7 @@ const Photo: FC<Props> = (props) => {
             </label>
             <hr />
             <p className="des">
-              Once you delete the album all of your photos will be deleted.
+              Once you delete this is image you can't get it back.
             </p>
 
             <div className="btn-wrapper pt-3 d-flex align-items-center justify-content-end gap-2">

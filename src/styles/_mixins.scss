@@ -24,6 +24,15 @@
   }
 }
 
+@mixin iconDesign {
+  border-radius: 50%;
+  background: rgb(238, 238, 238);
+  @include wh(30px, 30px);
+  @include flex(row, $center: true);
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
 @mixin button($primary: false) {
   outline: none;
   background: none;

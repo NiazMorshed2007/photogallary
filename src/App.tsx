@@ -78,10 +78,7 @@ const App: FC = () => {
             <Layout>
               <Routes>
                 <Route path={"/"} element={<Home />} />
-                <Route
-                  path={"/album/:album__id"}
-                  element={<PageAlbum loading_prop={loading} />}
-                />
+                <Route path={"/album/:album__id"} element={<PageAlbum />} />
                 <Route path="/create" element={<Create />} />
               </Routes>
             </Layout>

@@ -1,4 +1,4 @@
-import { Button, Dropdown, Menu } from "antd";
+import { Button, Dropdown, Menu, Typography } from "antd";
 import Modal from "antd/lib/modal/Modal";
 import { arrayRemove, doc, updateDoc } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
@@ -12,6 +12,8 @@ import { Link } from "react-router-dom";
 import { db, storage } from "../firebase/firebase";
 import { IAlbum } from "../interfaces/IAlbum";
 import { RootState } from "../reducers";
+
+const { Paragraph } = Typography;
 
 interface Props {
   album: IAlbum;
@@ -28,24 +30,26 @@ const Album: FC<Props> = (props) => {
   const deleteAlbum = (): void => {
     const docRef = doc(db, "users", user_profile.uid);
     const album_thumbRef = ref(storage, album.thumb);
-    const album_photosRef = ref(storage);
+    // const album_photosRef = ref(storage);
     deleteObject(album_thumbRef)
       .then(() => {
-        updateDoc(docRef, {
-          albums: arrayRemove(album),
-        });
         setVisible(false);
       })
       .catch((err) => {
         console.log(err);
       });
+    updateDoc(docRef, {
+      albums: arrayRemove(album),
+    });
   };
   return (
     <>
       <div className="album mb-5 shadow pointer">
         <div className="thumb-wrapper position-relative">
           <div className="position-absolute w-100 d-flex align-items-center justify-content-center h-100 top-0">
-            <span>Waiting....</span>
+            <span>
+              {isPreviewMode ? "Choose a img to preview" : "waiting..."}
+            </span>
           </div>
           {!isPreviewMode ? (
             <Link to={`/album/${album.id}`} state={{ album__id: album.id }}>
@@ -57,7 +61,15 @@ const Album: FC<Props> = (props) => {
         </div>
         <div className="album__content d-flex align-items-center justify-content-between">
           <div className="left">
-            <h6 className="title">{album.title}</h6>
+            <h6 className="title">
+              <Paragraph
+                style={{ width: 200 + "px" }}
+                className="m-0"
+                ellipsis={true}
+              >
+                {album.title}
+              </Paragraph>
+            </h6>
             <span className="date">{album.date}</span>
           </div>
           <div className="right d-flex align-items-center gap-3">

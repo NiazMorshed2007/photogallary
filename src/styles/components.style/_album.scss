@@ -47,12 +47,8 @@
     }
     .right {
       i {
-        border-radius: 50%;
-        background: rgb(238, 238, 238);
-        @include wh(30px, 30px);
-        @include flex(row, $center: true);
-        // opacity: 0;
-        transition: all 0.3s ease-in-out;
+        @include iconDesign;
+        opacity: 1;
       }
     }
   }

@@ -1,9 +1,9 @@
+import React, { FC, FormEvent, useEffect, useState } from "react";
 import { Button } from "antd";
 import Modal from "antd/lib/modal/Modal";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import * as _ from "lodash";
-import React, { FC, FormEvent, useEffect, useState } from "react";
 import { HiOutlinePlusSm } from "react-icons/hi";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -17,34 +17,29 @@ import { IAlbum } from "../interfaces/IAlbum";
 import { IPhoto } from "../interfaces/IPhoto";
 import { IProfile } from "../interfaces/IProfile";
 import { RootState } from "../reducers";
+import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
+import { MdClear } from "react-icons/md";
 
-interface Props {
-  loading_prop: boolean;
-}
-
-const PageAlbum: FC<Props> = (props) => {
-  const { loading_prop } = props;
+const PageAlbum: FC = () => {
   const [visible, setVisible] = useState<boolean>(false);
+  const [slidermodalVisible, setSliderModalVisible] = useState<boolean>(false);
+  const [index, setIndex] = useState<number>(0);
   const types: String[] = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
   const [photos, setPhotos] = useState<IPhoto[]>([]);
   const [file, setFile] = useState<any>(null);
   const dispatch = useDispatch();
   const [uploading, setUploading] = useState<boolean>(false);
-  // const [loading, setLoading] = useState<boolean>(true);
   const [progress, setProgress] = useState<number>(0);
   const [url, setUrl] = useState<string>("");
   const [error, setError] = useState<string>("");
-  const showModal = (): void => {
+  const showAddModal = (): void => {
     setVisible(true);
   };
-  const hideModal = (): void => {
+  const hideAddModal = (): void => {
     setVisible(false);
   };
   const user_profile: IProfile = useSelector((state: RootState) => {
     return state.user_profile;
-  });
-  const loading: boolean = useSelector((state: RootState) => {
-    return state.loading;
   });
   const user_albums: IAlbum[] = useSelector((state: RootState) => {
     return state.user_albums;
@@ -52,6 +47,18 @@ const PageAlbum: FC<Props> = (props) => {
   const { album__id } = useParams();
   const metadata = {
     contentType: "image/jpeg",
+  };
+  const next = (): void => {
+    if (index < photos.length - 1) {
+      setIndex(index + 1);
+      console.log(index, "dec_based");
+    }
+  };
+  const prev = (): void => {
+    if (index > 0) {
+      setIndex(index - 1);
+      console.log(index, "inc_based");
+    }
   };
   const storageRef = ref(storage, "images/" + file?.name);
   const docRef = doc(db, "users", user_profile.uid);
@@ -100,7 +107,7 @@ const PageAlbum: FC<Props> = (props) => {
             albums: user_albums,
           });
           setUploading(false);
-          hideModal();
+          hideAddModal();
           setFile(null);
         }
       );
@@ -169,7 +176,7 @@ const PageAlbum: FC<Props> = (props) => {
                   <span>Show Preview</span>
                 </div> */}
                 <div
-                  onClick={showModal}
+                  onClick={showAddModal}
                   className="add-new-dir btn-header preview-option d-flex gap-1 align-items-center pointer"
                 >
                   <HiOutlinePlusSm />
@@ -191,7 +198,15 @@ const PageAlbum: FC<Props> = (props) => {
               <div className="photos-wrapper flex-wrap d-flex align-items-center gap-2">
                 {photos &&
                   photos.map((photo, i) => (
-                    <Photo album={album} photo={photo} key={i} />
+                    <Photo
+                      onFuction={() => {
+                        setSliderModalVisible(true);
+                        setIndex(i);
+                      }}
+                      album={album}
+                      photo={photo}
+                      key={i}
+                    />
                   ))}
               </div>
             </>
@@ -200,7 +215,7 @@ const PageAlbum: FC<Props> = (props) => {
               <img src={Empty} alt="" />
               <h3>Upload an image to see</h3>
               <Button
-                onClick={showModal}
+                onClick={showAddModal}
                 className="primary-btn-fill mt-4 mb-5"
               >
                 Add Image
@@ -213,10 +228,10 @@ const PageAlbum: FC<Props> = (props) => {
         <Modal
           className="my-modal"
           onCancel={() => {
-            hideModal();
+            hideAddModal();
             setFile(null);
           }}
-          onOk={hideModal}
+          onOk={hideAddModal}
           footer={false}
           visible={visible}
           closeIcon={<></>}
@@ -253,6 +268,53 @@ const PageAlbum: FC<Props> = (props) => {
           </div>
         </Modal>
       )}
+
+      {/* slider modal */}
+      <Modal
+        className="my-modal"
+        onCancel={() => {
+          setSliderModalVisible(false);
+        }}
+        onOk={() => {
+          setSliderModalVisible(false);
+        }}
+        footer={false}
+        visible={slidermodalVisible}
+        closeIcon={<></>}
+        mask={false}
+      >
+        <div className="my-modal slider-modal shadow">
+          <i onClick={prev} className="arrow arrow-left">
+            <BsArrowLeft />
+          </i>
+          <i onClick={next} className="arrow arrow-right">
+            <BsArrowRight />
+          </i>
+          <i
+            onClick={() => {
+              setSliderModalVisible(false);
+            }}
+            className="icon cross"
+          >
+            <MdClear />
+          </i>
+          <div className="imgs-wrapper">
+            <div
+              style={{
+                transform: `translateX(${-780 * index}px)`,
+              }}
+              className="imgs-inner-wrapper d-flex"
+            >
+              {photos &&
+                photos.map((photo) => (
+                  <div className="img-wrapper" key={photo.photo__id}>
+                    <img src={photo.photo__url} alt="" />
+                  </div>
+                ))}
+            </div>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 };

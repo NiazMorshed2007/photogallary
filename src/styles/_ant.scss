@@ -35,6 +35,49 @@
           color: $silver;
         }
       }
+      .slider-modal {
+        width: 850px;
+        transform: translate(-18%, -15%);
+        @include flex(row, $center: true);
+        user-select: none;
+        i {
+          position: fixed;
+          @include iconDesign;
+          avg {
+            font-size: 22px;
+          }
+        }
+        .arrow {
+          top: 50%;
+          transform: translateY(-50%);
+        }
+        .arrow-left {
+          left: 5px;
+        }
+        .arrow-right {
+          right: 5px;
+        }
+        .cross {
+          top: 4px;
+          z-index: 20;
+        }
+        .imgs-wrapper {
+          background-color: rgba($color: $input_back, $alpha: 0.4);
+          border-radius: 9px;
+          @include wh(48.75rem, 480px);
+          overflow: hidden;
+          .imgs-inner-wrapper {
+            transition: all 0.3s ease-in-out;
+            .img-wrapper {
+              img {
+                @include wh(780px, 480px);
+                aspect-ratio: 1/2;
+                object-fit: contain;
+              }
+            }
+          }
+        }
+      }
 
       .add-image-modal {
         width: 690px;
