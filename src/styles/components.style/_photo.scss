@@ -12,7 +12,9 @@
       }
     }
   }
-  .img-holder {
+  .img-placeholder {
+    position: absolute;
+    inset: 0;
   }
   .img-wrapper {
     @include wh(100%, 100%);

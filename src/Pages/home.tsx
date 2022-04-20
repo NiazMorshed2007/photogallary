@@ -78,7 +78,7 @@ const Home: FC = () => {
       {user_albums.length > 0 ? (
         <div className="h-100">
           <div>
-            <div className="albums-wrapper px-5 d-flex align-items-center justify-content-around flex-wrap pt-4 mt-2">
+            <div className="albums-wrapper px-5 d-flex flex-wrap pt-4 mt-2 gap-3">
               {user_albums.map((album) => (
                 <Album
                   onFav={() => {

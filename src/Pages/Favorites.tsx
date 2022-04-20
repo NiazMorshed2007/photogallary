@@ -9,10 +9,11 @@ import Album from "../components/Album";
 import { doc, updateDoc } from "firebase/firestore";
 import { IProfile } from "../interfaces/IProfile";
 import { db } from "../firebase/firebase";
+import { IPhoto } from "../interfaces/IPhoto";
+import Photo from "../components/Photo";
 
 const Favorite: FC = () => {
   const dispatch = useDispatch();
-  const [favorite, setFavorite] = useState<boolean>(false);
   const user_albums: IAlbum[] = useSelector((state: RootState) => {
     return state.user_albums;
   });
@@ -21,6 +22,16 @@ const Favorite: FC = () => {
     _.filter(user_albums, (album) => {
       return album.favorite === true;
     });
+  const all_photos: IPhoto[][] =
+    user_albums &&
+    _.map(user_albums, (album) => {
+      return album.photos;
+    });
+
+  const fav_photos: IPhoto[] = _.find(all_photos && all_photos, (photos) => {
+    return photos[0].favorite === true;
+  })!;
+
   const user_profile: IProfile = useSelector((state: RootState) => {
     return state.user_profile;
   });
@@ -73,24 +84,44 @@ const Favorite: FC = () => {
           </>
         }
       />
-      <main className="px-5 pt-3 h-100 w-100">
-        <div className="h-100">
-          <div>
-            <div className="albums-wrapper px-5 d-flex align-items-center justify-content-around flex-wrap pt-4 mt-2">
-              {fav_albums.map((album) => (
-                <Album
-                  onFav={() => {
-                    setFavFunc(album.id);
-                  }}
-                  isPreviewMode={false}
-                  key={album.id}
-                  album={album}
-                />
-              ))}
-            </div>
-          </div>
+      <div className="h-100">
+        <div className="px-5 pt-4 mt-2">
+          {fav_albums && fav_albums.length > 0 && (
+            <>
+              <p className="mb-3 px-1">Favorite Albums</p>
+              <div className="albums-wrapper d-flex align-items-center gap-3 flex-wrap ">
+                {fav_albums.map((album) => (
+                  <Album
+                    onFav={() => {
+                      setFavFunc(album.id);
+                    }}
+                    isPreviewMode={false}
+                    key={album.id}
+                    album={album}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+          {fav_photos && fav_photos.length > 0 && (
+            <>
+              <p className="mb-3 px-1">Favorite Albums</p>
+              <div className="albums-wrapper d-flex align-items-center gap-3 flex-wrap ">
+                {fav_photos.map((photo) => (
+                  <Photo
+                    onFav={() => {
+                      setFavFunc(photo.photo__id);
+                    }}
+                    previewMode={false}
+                    key={photo.photo__id}
+                    photo={photo}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
-      </main>
+      </div>
     </section>
   );
 };

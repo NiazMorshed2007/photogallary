@@ -17,6 +17,11 @@
   }
 }
 
+.error {
+  color: $error;
+  font-size: 13px;
+}
+
 .danger-btn {
   @extend .default-btn;
   background: #ee4646;

@@ -14,13 +14,16 @@ import { IProfile } from "../interfaces/IProfile";
 import { RootState } from "../reducers";
 
 interface Props {
-  photo: IPhoto;
+  photo: IPhoto | null;
   album: IAlbum;
   onFuction: () => void;
+  previewMode: boolean;
+  preview_url?: string;
+  onFav: () => void;
 }
 
 const Photo: FC<Props> = (props) => {
-  const { photo, album, onFuction } = props;
+  const { photo, album, onFuction, onFav, previewMode, preview_url } = props;
   const [visible, setVisible] = useState<boolean>(false);
   const [checked, setChecked] = useState<boolean>(false);
   const user_albums: IAlbum[] = useSelector((state: RootState) => {
@@ -64,28 +67,44 @@ const Photo: FC<Props> = (props) => {
     }
   };
 
+  const alert = (): void => {
+    window.alert("Please, upload image first");
+  };
+
   return (
     <>
-      <div className="photo pointer shadow">
-        <div className="img-placeholder"></div>
+      <div className="photo position-relative d-flex align-items-center justify-content-center pointer shadow">
+        <div className="img-placeholder d-flex align-items-center justify-content-center">
+          {previewMode ? "Select a image to preview" : ""}
+        </div>
         <div className="img-wrapper position-relative">
-          <i onClick={onFuction} className="expand-icon">
-            <BsArrowsAngleExpand />
-          </i>
-          <i className="heart-icon">
-            <AiOutlineHeart />
+          {previewMode ? (
+            <i onClick={alert} className="expand-icon">
+              <BsArrowsAngleExpand />
+            </i>
+          ) : (
+            <i onClick={onFuction} className="expand-icon">
+              <BsArrowsAngleExpand />
+            </i>
+          )}
+          <i onClick={onFav} className="heart-icon">
+            <AiOutlineHeart style={{ color: photo?.favorite ? "red" : "" }} />
           </i>
           <i
             onClick={() => {
-              showDeleteModal();
-              setSelectedPhotoId(photo.photo__id);
-              setSelectedPhotoURL(photo.photo__url);
+              if (!previewMode) {
+                showDeleteModal();
+                setSelectedPhotoId(photo?.photo__id!);
+                setSelectedPhotoURL(photo?.photo__url!);
+              } else {
+                alert();
+              }
             }}
             className="delete-icon"
           >
             <AiOutlineDelete />
           </i>
-          <img src={photo.photo__url} alt="" />
+          <img src={previewMode ? preview_url : photo?.photo__url!} alt="" />
         </div>
       </div>
       <Modal

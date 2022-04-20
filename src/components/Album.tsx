@@ -45,7 +45,7 @@ const Album: FC<Props> = (props) => {
   };
   return (
     <>
-      <div className="album mb-5 shadow pointer">
+      <div className="album mb-3 shadow pointer">
         <div className="thumb-wrapper position-relative">
           <div className="position-absolute w-100 d-flex align-items-center justify-content-center h-100 top-0">
             <span>

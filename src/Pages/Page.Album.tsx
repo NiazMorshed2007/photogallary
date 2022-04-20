@@ -22,6 +22,7 @@ import { MdClear } from "react-icons/md";
 
 const PageAlbum: FC = () => {
   const [visible, setVisible] = useState<boolean>(false);
+  const [favorite, setFavorite] = useState<boolean>(false);
   const [slidermodalVisible, setSliderModalVisible] = useState<boolean>(false);
   const [index, setIndex] = useState<number>(0);
   const types: String[] = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
@@ -101,6 +102,7 @@ const PageAlbum: FC = () => {
           album.photos.push({
             photo__url: URL,
             photo__id: (Math.random() * 15252120324).toString(),
+            favorite: favorite,
           });
           dispatch(setAlbums([...user_albums]));
           updateDoc(docRef, {
@@ -136,6 +138,16 @@ const PageAlbum: FC = () => {
     _.find(user_albums, (album) => {
       return album.id === album__id;
     })!;
+  const FavImageSetter = (id: string): void => {
+    const img_index = _.findIndex(album && album.photos, (photo) => {
+      return photo.photo__id === id;
+    });
+    album.photos[img_index].favorite = !album.photos[img_index].favorite;
+    dispatch(setAlbums([...user_albums]));
+    updateDoc(docRef, {
+      albums: user_albums,
+    });
+  };
   useEffect(() => {
     if (file) {
       const reader = new FileReader();
@@ -199,6 +211,10 @@ const PageAlbum: FC = () => {
                 {photos &&
                   photos.map((photo, i) => (
                     <Photo
+                      onFav={() => {
+                        FavImageSetter(photo.photo__id);
+                      }}
+                      previewMode={false}
                       onFuction={() => {
                         setSliderModalVisible(true);
                         setIndex(i);
@@ -241,11 +257,22 @@ const PageAlbum: FC = () => {
             <div className="modal-content-wrapper">
               <div className={`modal-content shadow my-modal add-image-modal`}>
                 <form onSubmit={handleSubmit}>
-                  <input onChange={fileChanger} type="file" />
-                  {error !== "" && <p className="error">{error}</p>}
-                  {uploading && <ProgressBar progress={progress} />}
-                  <img style={{ width: 280, height: 280 }} src={url} alt="" />
-                  <div className="btn-wrapper d-flex gap-2 align-items-center justify-content-end pt-3">
+                  <div className="d-flex gap-4 align-items-center">
+                    <div className="wrap d-flex flex-column">
+                      <input onChange={fileChanger} type="file" />
+                      {error !== "" && <p className="error">{error}</p>}
+                      {uploading && <ProgressBar progress={progress} />}
+                    </div>
+                    <Photo
+                      onFav={() => setFavorite(!favorite)}
+                      photo={null}
+                      previewMode={true}
+                      preview_url={url}
+                      onFuction={() => {}}
+                      album={album}
+                    />
+                  </div>
+                  <div className="btn-wrapper mt-3 d-flex gap-2 align-items-center justify-content-end pt-3">
                     <Button
                       className="primary-btn-fill"
                       type="primary"
