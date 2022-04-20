@@ -27,7 +27,8 @@
   background: #ee4646;
   color: white;
   border-color: #f12425;
-  &:hover {
+  &:hover,
+  &:focus {
     border-color: #f12425;
     background: #f02d2d !important;
     color: white;

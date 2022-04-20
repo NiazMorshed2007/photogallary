@@ -1,37 +1,22 @@
-import { Button } from "antd";
-import { getAuth } from "firebase/auth";
 import React, { FC } from "react";
-import { BsArrowBarLeft } from "react-icons/bs";
-import { MdMotionPhotosOn } from "react-icons/md";
-import { useDispatch, useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
-import { setLogged } from "../actions";
-import firebase from "../firebase/firebase";
 import { BiHomeAlt } from "react-icons/bi";
+import { BsArrowBarLeft } from "react-icons/bs";
 import { FiSettings } from "react-icons/fi";
-import { MdOutlineWallpaper, MdOutlineFavoriteBorder } from "react-icons/md";
+import {
+  MdMotionPhotosOn,
+  MdOutlineFavoriteBorder,
+  MdOutlineWallpaper,
+} from "react-icons/md";
+import { useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
+import avatar from "../assets/character.png";
 import { IProfile } from "../interfaces/IProfile";
 import { RootState } from "../reducers";
-import avatar from "../assets/character.png";
 
 const Sidebar: FC = () => {
-  const auth = firebase && getAuth();
   const user_profile: IProfile = useSelector((state: RootState) => {
     return state.user_profile;
   });
-  const dispatch = useDispatch();
-  const logout = (): void => {
-    // firebase.auth()
-    //   .signOut()
-    //   .then((res) => {
-    //     console.log(res);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-    auth.signOut();
-    dispatch(setLogged(false));
-  };
   return (
     <aside className={`sidebar border p-3 pt-4`}>
       <header className="d-flex px-2 align-items-center justify-content-between">

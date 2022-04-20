@@ -1,20 +1,19 @@
-import React, { FC, useEffect, useState } from "react";
-import { FcGoogle } from "react-icons/fc";
-import { MdOutlinePersonOff } from "react-icons/md";
-import { gsap, Power2 } from "gsap";
-import firebase from "../firebase/firebase";
 import {
-  getAuth,
   createUserWithEmailAndPassword,
+  getAuth,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { db } from "../firebase/firebase";
-import { IProfile } from "../interfaces/IProfile";
 import { doc, setDoc } from "firebase/firestore";
+import { gsap, Power2 } from "gsap";
+import React, { FC, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import firebase, { db } from "../firebase/firebase";
+import { IProfile } from "../interfaces/IProfile";
 
 const Auth: FC = () => {
   const auth = firebase && getAuth();
   const [email, setEmail] = useState<string>("");
+  const navigate = useNavigate();
   const [password, setPassword] = useState<string>("");
   const [errMsg, setErrMsg] = useState<string>("");
   const [isSigningUp, setIsSigningUp] = useState<boolean>(false);
@@ -37,25 +36,35 @@ const Auth: FC = () => {
           });
         })
         .catch((err) => {
-          console.log(err.message);
-          setErrMsg("Invalid email or password");
+          switch (err.code) {
+            case "auth/email-already-in-use":
+              {
+                setErrMsg("This email is alerady in use");
+              }
+              break;
+            case "auth/invalid-email":
+              {
+                setErrMsg("This email doesn't exists");
+              }
+              break;
+            case "auth/weak-password": {
+              setErrMsg("Please enter a strong password(at least 6 chars)");
+            }
+          }
         });
-      setEmail("");
-      setPassword("");
     } else {
       signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
-          console.log(user);
           setErrMsg("");
         })
         .catch((err) => {
-          console.log(err.message);
           setErrMsg("Invalid email or password");
         });
-      setEmail("");
-      setPassword("");
     }
+    setEmail("");
+    setPassword("");
+    navigate("/");
   };
   useEffect(() => {
     let tl = gsap.timeline();
@@ -158,18 +167,6 @@ const Auth: FC = () => {
           )}
           <button className="btn-submit btn mt-2">Sign In</button>
         </form>
-        <div className="or pt-2 d-flex align-items-center justify-content-center flex-column">
-          <div className="line"></div>
-          <p className="p-2 bg-white">or</p>
-          <div className="d-flex align-items-center justify-content-center flex-column">
-            <div className="s-google mb-2 btn border shadow-sm">
-              Sign in with <FcGoogle />
-            </div>
-            <div className="s-google btn border shadow-sm">
-              Sign in as anonymus <MdOutlinePersonOff />
-            </div>
-          </div>
-        </div>
       </div>
     </section>
   );

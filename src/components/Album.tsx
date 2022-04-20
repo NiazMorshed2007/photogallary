@@ -90,11 +90,18 @@ const Album: FC<Props> = (props) => {
             trigger={["click"]}
             overlay={
               <Menu>
-                <Menu.Item icon={<MdOutlineFavoriteBorder />}>
-                  Add to favorites
-                </Menu.Item>
-                <Menu.Item icon={<FiEdit2 />}>Edit</Menu.Item>
                 <Menu.Item
+                  key={"fav"}
+                  onClick={onFav}
+                  icon={<MdOutlineFavoriteBorder />}
+                >
+                  {album.favorite ? "Remove from" : "Add to"} favorites
+                </Menu.Item>
+                <Menu.Item key={"edt"} icon={<FiEdit2 />}>
+                  Edit
+                </Menu.Item>
+                <Menu.Item
+                  key={"expand"}
                   onClick={() => setVisible(true)}
                   icon={<AiOutlineDelete />}
                 >

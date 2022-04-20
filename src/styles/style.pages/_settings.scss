@@ -1,0 +1,25 @@
+.settings-page {
+  .avatar-wrapper {
+    @include wh(250px, 250px);
+    overflow: hidden;
+    border-radius: 50%;
+    img {
+      @include wh(100%, 100%);
+      object-fit: cover;
+    }
+  }
+  .info {
+    form {
+      input {
+        width: 380px;
+        padding: 10px;
+        border: none;
+        outline: none;
+        border-radius: 7px;
+        background: none;
+        border: 2px solid rgb(230, 230, 230);
+        margin-bottom: 6px;
+      }
+    }
+  }
+}

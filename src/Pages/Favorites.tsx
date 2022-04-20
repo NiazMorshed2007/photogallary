@@ -1,16 +1,14 @@
-import React, { FC, useEffect, useState } from "react";
+import { doc, updateDoc } from "firebase/firestore";
+import * as _ from "lodash";
+import React, { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setAlbums, setLoading } from "../actions";
-import Header from "../components/Header";
-import { IAlbum } from "../interfaces/IAlbum";
-import { RootState } from "../reducers";
-import * as _ from "lodash";
 import Album from "../components/Album";
-import { doc, updateDoc } from "firebase/firestore";
-import { IProfile } from "../interfaces/IProfile";
+import Header from "../components/Header";
 import { db } from "../firebase/firebase";
-import { IPhoto } from "../interfaces/IPhoto";
-import Photo from "../components/Photo";
+import { IAlbum } from "../interfaces/IAlbum";
+import { IProfile } from "../interfaces/IProfile";
+import { RootState } from "../reducers";
 
 const Favorite: FC = () => {
   const dispatch = useDispatch();
@@ -22,15 +20,6 @@ const Favorite: FC = () => {
     _.filter(user_albums, (album) => {
       return album.favorite === true;
     });
-  const all_photos: IPhoto[][] =
-    user_albums &&
-    _.map(user_albums, (album) => {
-      return album.photos;
-    });
-
-  const fav_photos: IPhoto[] = _.find(all_photos && all_photos, (photos) => {
-    return photos[0].favorite === true;
-  })!;
 
   const user_profile: IProfile = useSelector((state: RootState) => {
     return state.user_profile;
@@ -103,23 +92,30 @@ const Favorite: FC = () => {
               </div>
             </>
           )}
-          {fav_photos && fav_photos.length > 0 && (
+          {/* {fav_photos && fav_photos.length > 0 && (
             <>
               <p className="mb-3 px-1">Favorite Albums</p>
               <div className="albums-wrapper d-flex align-items-center gap-3 flex-wrap ">
                 {fav_photos.map((photo) => (
-                  <Photo
-                    onFav={() => {
-                      setFavFunc(photo.photo__id);
+                  <div
+                    onClick={() => {
+                      album_finder(photo.photo__id);
                     }}
-                    previewMode={false}
-                    key={photo.photo__id}
-                    photo={photo}
-                  />
+                  >
+                    <Photo
+                      // album={album_finder(photo.photo__id)}
+                      onFav={() => {
+                        setFavFunc(photo.photo__id);
+                      }}
+                      previewMode={false}
+                      key={photo.photo__id}
+                      photo={photo}
+                    />
+                  </div>
                 ))}
               </div>
             </>
-          )}
+          )} */}
         </div>
       </div>
     </section>

@@ -1,8 +1,8 @@
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { doc, DocumentData, getDoc, onSnapshot } from "firebase/firestore";
+import { doc, DocumentData, onSnapshot } from "firebase/firestore";
 import React, { FC, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { setAlbums, setLogged, setProfile } from "./actions";
 import firebase, { db } from "./firebase/firebase";
 import { IProfile } from "./interfaces/IProfile";
@@ -12,13 +12,14 @@ import Create from "./Pages/Create";
 import Favorite from "./Pages/Favorites";
 import Home from "./Pages/home";
 import PageAlbum from "./Pages/Page.Album";
+import SettingsPage from "./Pages/SettingsPage";
 import { RootState } from "./reducers";
 
 const App: FC = () => {
   const auth = firebase && getAuth();
   const [loading, setLoading] = useState<boolean>(true);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const isLogged: boolean = useSelector((state: RootState) => {
     return state.isLogged;
   });
@@ -46,6 +47,12 @@ const App: FC = () => {
       }
     });
   }, []);
+
+  useEffect(() => {
+    if (!isLogged) {
+      navigate("/login");
+    }
+  }, [isLogged]);
 
   useEffect(() => {
     const getData = async (): Promise<void> => {
@@ -82,6 +89,7 @@ const App: FC = () => {
                 <Route path={"/album/:album__id"} element={<PageAlbum />} />
                 <Route path="/create" element={<Create />} />
                 <Route path="/favorites" element={<Favorite />} />
+                <Route path="/settings" element={<SettingsPage />} />
               </Routes>
             </Layout>
           ) : (
