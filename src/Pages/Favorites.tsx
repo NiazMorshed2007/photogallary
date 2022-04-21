@@ -2,8 +2,10 @@ import { doc, updateDoc } from "firebase/firestore";
 import * as _ from "lodash";
 import React, { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { setAlbums, setLoading } from "../actions";
 import Album from "../components/Album";
+import Empty from "../components/Empty";
 import Header from "../components/Header";
 import { db } from "../firebase/firebase";
 import { IAlbum } from "../interfaces/IAlbum";
@@ -12,6 +14,7 @@ import { RootState } from "../reducers";
 
 const Favorite: FC = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const user_albums: IAlbum[] = useSelector((state: RootState) => {
     return state.user_albums;
   });
@@ -75,7 +78,7 @@ const Favorite: FC = () => {
       />
       <div className="h-100">
         <div className="px-5 pt-4 mt-2">
-          {fav_albums && fav_albums.length > 0 && (
+          {fav_albums && fav_albums.length > 0 ? (
             <>
               <p className="mb-3 px-1">Favorite Albums</p>
               <div className="albums-wrapper d-flex align-items-center gap-3 flex-wrap ">
@@ -91,6 +94,13 @@ const Favorite: FC = () => {
                 ))}
               </div>
             </>
+          ) : (
+            <Empty
+              message="You haven't any favorites. check out later"
+              runFunc={() => {
+                navigate("/");
+              }}
+            />
           )}
           {/* {fav_photos && fav_photos.length > 0 && (
             <>

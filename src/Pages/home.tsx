@@ -2,7 +2,6 @@ import { Button } from "antd";
 import React, { FC, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Empty from "../assets/empty1.svg";
 import Header from "../components/Header";
 import { RootState } from "../reducers";
 import { BsUiRadiosGrid } from "react-icons/bs";
@@ -14,6 +13,7 @@ import * as _ from "lodash";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../firebase/firebase";
 import { IProfile } from "../interfaces/IProfile";
+import Empty from "../components/Empty";
 
 const Home: FC = () => {
   const navigate = useNavigate();
@@ -93,16 +93,12 @@ const Home: FC = () => {
           </div>
         </div>
       ) : (
-        <div className="empty mt-4 d-flex align-items-center justify-content-center w-100 h-100 flex-column">
-          <img className="empty-image" src={Empty} alt="" />
-          <h3>Create a Album to get started 🚀</h3>
-          <Button
-            onClick={() => navigate("/create")}
-            className="primary-btn-fill mt-4 mb-5"
-          >
-            Create
-          </Button>
-        </div>
+        <Empty
+          message="Create a new album to get started 🚀"
+          runFunc={() => {
+            navigate("/create");
+          }}
+        />
       )}
     </section>
   );

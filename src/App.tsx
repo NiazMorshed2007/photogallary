@@ -19,7 +19,6 @@ const App: FC = () => {
   const auth = firebase && getAuth();
   const [loading, setLoading] = useState<boolean>(true);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const isLogged: boolean = useSelector((state: RootState) => {
     return state.isLogged;
   });
@@ -40,19 +39,11 @@ const App: FC = () => {
         dispatch(setProfile(user_obj));
         setLoading(false);
         dispatch(setLogged(true));
-        console.log(user);
       } else {
-        console.log("signed out");
         setLoading(false);
       }
     });
   }, []);
-
-  useEffect(() => {
-    if (!isLogged) {
-      navigate("/login");
-    }
-  }, [isLogged]);
 
   useEffect(() => {
     const getData = async (): Promise<void> => {
@@ -65,12 +56,6 @@ const App: FC = () => {
             dispatch(setAlbums(user_data[0].albums ? user_data[0].albums : []));
           }
         );
-        // const albums__data = onSnapshot(
-        //   doc(db, "users", user_profile.uid, "albums/sdaf"),
-        //   (doc) => {
-        //     console.log("Current data: ", doc.data());
-        //   }
-        // );
       }
     };
     getData();
